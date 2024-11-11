@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | Home Page')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<main th:fragment="content">
+    <h1>Home Page</h1>
+    <p>Welcome to the Home Page</p>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

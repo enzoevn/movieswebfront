@@ -1,0 +1,140 @@
+/* Define CSS variables for light and dark themes */
+:root {
+    --background-color: #121212; /* Dark background */
+    --text-color: #e0e0e0; /* Light grey text */
+    --header-color: #1f1f1f; /* Dark grey header */
+    --background-color-aside: #2c2c2c; /* Slightly lighter dark grey for aside */
+    --background-color-nav: #1f1f1f; /* Dark grey for nav */
+    --accent-color: #bb86fc; /* Purple accent color */
+    --primary-color: #03dac6; /* Teal primary color */
+    --secondary-color: #3700b3; /* Dark purple secondary color */
+    --error-color: #cf6679; /* Red error color */
+}
+
+/* Apply the CSS variables */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--header-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    height: 10vh;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    height: 5vh;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px 30px;
+    background-color: var(--background-color-nav);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    height: 75vh;
+}
+
+main tr {
+    background-color: var(--background-color-aside);
+    color: var(--text-color);
+}
+
+main tr:nth-child(even) {
+    background-color: var(--background-color-nav);
+}
+
+main h3 {
+    color: var(--accent-color);
+    padding-bottom: 10px;
+}
+
+main a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+main td {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+main td a:hover {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+main p {
+    color: var(--text-color);
+}
+
+footer {
+    background-color: var(--header-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    height: 10vh;
+}
+
+aside {
+    background-color: var(--background-color-aside);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    padding: 20px 20px;
+    height: 75vh;
+    width: 20vh;
+    flex-direction: column;
+}
+
+aside ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 10px 20px;
+    margin: 0;
+}
+
+aside ul li {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+aside ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+}

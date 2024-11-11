@@ -1,0 +1,30 @@
+<!-- src/main/resources/templates/movies.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | Movie Detail Information')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="content">
+    <aside th:fragment="content">
+        <h3>Movies List</h3>
+        <ul>
+            <li th:each="genre : ${uniqueGenres}">
+                <a th:href="@{'/movies/genre/' + ${genre}}" th:text="${genre}"></a>
+        </ul>
+    </aside>
+    <main>
+        <h3>Movie Details</h3>
+        <div th:if="${movie != null}">
+            <p>Movie Title: <span th:text="${movie.title}"></span></p>
+            <p>Movie Genre: <span th:text="${movie.genre}"></span></p>
+            <p>Movie Duration: <span th:text="${movie.duration}"></span></p>
+            <p>Movie Director: <span th:text="${movie.director}"></span></p>
+            <p>Movie Description: <span th:text="${movie.synopsis}"></span></p>
+        </div>
+    </main>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

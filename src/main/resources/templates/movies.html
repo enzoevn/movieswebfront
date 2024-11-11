@@ -1,0 +1,56 @@
+<!-- src/main/resources/templates/movies.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | All Movies Information')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="content">
+    <aside th:fragment="content">
+        <h3>Movies List</h3>
+        <ul>
+            <li th:each="genre : ${uniqueGenres}">
+                <a th:href="@{'/movies/genre/' + ${genre}}" th:text="${genre}"></a>
+        </ul>
+    </aside>
+    <main>
+        <h3>Movies List</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Director</th>
+                <th>Description</th>
+                <th>Actions</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="movie : ${movies}">
+                <td><a th:href="@{'/movies/' + ${movie.id}}" th:text="${movie.title}"></a></td>
+                <td th:text="${movie.genre}"></td>
+                <td th:text="${movie.duration}"></td>
+                <td th:text="${movie.director}"></td>
+                <td th:text="${movie.synopsis}"></td>
+                <td>
+                    <a th:href="@{'/movies/' + ${movie.id}}" class="btn btn-primary">Details</a>
+                </td>
+                <td>
+                    <a th:href="@{'/movies/edit/' + ${movie.id}}" class="btn btn-warning">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{'/movies/delete/' + ${movie.id}}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </main>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>
