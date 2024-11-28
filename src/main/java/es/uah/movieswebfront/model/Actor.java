@@ -11,9 +11,9 @@ public class Actor {
     private Integer id;
     private String name;
     private String birthDate;
-    private String birthCountry;
+    private Country birthCountry;
 
-    public Actor(Integer id, String name, String birthDate, String birthCountry) {
+    public Actor(Integer id, String name, String birthDate, Country birthCountry) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;

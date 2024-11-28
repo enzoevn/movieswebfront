@@ -69,4 +69,12 @@ public class MovieService implements IMovieService {
         assert movies != null;
         return Arrays.asList(movies);
     }
+
+    @Override
+    public List<Movie> searchMovies(String query) {
+        RestTemplate restTemplate = new RestTemplate();
+        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/title/" + query, Movie[].class);
+        assert movies != null;
+        return Arrays.asList(movies);
+    }
 }

@@ -14,4 +14,5 @@ public interface IMovieService {
     List<Movie> getMoviesByYear(Integer year);
     List<Movie> getMoviesByGenre(String genre);
     List<Movie> getMoviesByActor(String actor);
+    List<Movie> searchMovies(String query);
 }

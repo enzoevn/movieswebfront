@@ -52,4 +52,11 @@ public class MovieController {
         model.addAttribute("uniqueGenres", uniqueGenres);
         return "movies";
     }
+
+    @GetMapping("/movies/search")
+    public String searchMovies(@RequestParam("query") String query, Model model) {
+        List<Movie> movies = movieService.searchMovies(query);
+        model.addAttribute("movies", movies);
+        return "index"; // Ensure this matches the name of your HTML template
+    }
 }
