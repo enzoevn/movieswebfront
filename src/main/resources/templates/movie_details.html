@@ -1,26 +1,40 @@
-<!-- src/main/resources/templates/movies.html -->
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | Movie Detail Information')}"></head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="content">
-    <aside th:fragment="content">
-        <h3>Movies List</h3>
-        <ul>
-            <li th:each="genre : ${uniqueGenres}">
-                <a th:href="@{'/movies/genre/' + ${genre}}" th:text="${genre}"></a>
-        </ul>
-    </aside>
     <main>
-        <h3>Movie Details</h3>
-        <div th:if="${movie != null}">
-            <p>Movie Title: <span th:text="${movie.title}"></span></p>
-            <p>Movie Genre: <span th:text="${movie.genre}"></span></p>
-            <p>Movie Duration: <span th:text="${movie.duration}"></span></p>
-            <p>Movie Director: <span th:text="${movie.director}"></span></p>
-            <p>Movie Description: <span th:text="${movie.synopsis}"></span></p>
+        <div class="container mt-5 pt-5">
+            <h1 th:text="${movie.title}">Movie Title</h1>
+            <div class="row">
+                <div class="col-md-4">
+                    <img th:src="@{${movie.coverImage}}" alt="Movie Cover" class="img-thumbnail" style="width: 100%; height: auto;">
+                </div>
+                <div class="col-md-8">
+                    <p><strong>Director:</strong> <span th:text="${movie.director}">Director Name</span></p>
+                    <p><strong>Genre:</strong> <span th:text="${movie.genre}">Genre</span></p>
+                    <p><strong>Year:</strong> <span th:text="${movie.year}">Year</span></p>
+                    <p><strong>Duration:</strong> <span th:text="${movie.duration}">Duration</span></p>
+                    <p><strong>Description:</strong> <span th:text="${movie.synopsis}">Description</span></p>
+                    <a th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Edit</a>
+                    <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <a th:href="@{/movies}" class="btn btn-secondary btn-sm">Back to Movies</a>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h2>Actors</h2>
+                    <ul class="list-group">
+                        <li th:each="actor : ${movie.actors}" class="list-group-item">
+                            <span th:text="${actor.name}">Actor Name</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </main>
 </div>
