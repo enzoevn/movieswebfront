@@ -4,6 +4,8 @@ import es.uah.movieswebfront.model.Movie;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface IMovieService {
 
     List<Movie> getAllMovies();
@@ -14,5 +16,7 @@ public interface IMovieService {
     List<Movie> getMoviesByYear(Integer year);
     List<Movie> getMoviesByGenre(String genre);
     List<Movie> getMoviesByActor(String actor);
-    List<Movie> searchMovies(String query);
+    List<Movie> searchMovies(String query, String searchType);
+    void uploadImage(Integer id, MultipartFile image);
+
 }
