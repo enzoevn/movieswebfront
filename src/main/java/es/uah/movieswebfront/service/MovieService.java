@@ -3,7 +3,12 @@ package es.uah.movieswebfront.service;
 import es.uah.movieswebfront.model.Movie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,10 +76,44 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<Movie> searchMovies(String query) {
+    public List<Movie> searchMovies(String query, String searchType) {
         RestTemplate restTemplate = new RestTemplate();
-        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/title/" + query, Movie[].class);
+        if (query.equals("")) {
+            return getAllMovies();
+        }
+        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/" + searchType + "/" + query, Movie[].class);
         assert movies != null;
         return Arrays.asList(movies);
+    }
+
+    @Override
+    public void uploadImage(Integer id, MultipartFile image) {
+        if (!image.isEmpty()) {
+            try {
+                //Check if is a valid image
+                String contentType = image.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    throw new IllegalArgumentException("Invalid image file");
+                }
+                else {
+                    System.out.println("Image file is valid");
+                    // Save the image to the static/images folder with the name {id}.jpg
+                    Path path = Paths.get("src/main/resources/static/images/" + id + ".jpg");
+                    Files.write(path, image.getBytes());
+                }     
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // Update the movie's image URL in the database
+        RestTemplate restTemplate = new RestTemplate();
+        Movie movie = restTemplate.getForObject(baseUrl + "/" + id, Movie.class);
+        assert movie != null;
+        movie.setCoverImage("/images/" + id + ".jpg");
+        // Log the movie object for debugging
+        System.out.println("Updating movie: " + movie);
+
+        restTemplate.put(baseUrl + "/" + id, movie);
     }
 }
