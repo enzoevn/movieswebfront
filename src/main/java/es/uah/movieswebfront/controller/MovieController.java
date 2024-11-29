@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -54,9 +56,24 @@ public class MovieController {
     }
 
     @GetMapping("/movies/search")
-    public String searchMovies(@RequestParam("query") String query, Model model) {
-        List<Movie> movies = movieService.searchMovies(query);
+    public String searchMovies(@RequestParam("query") String query, @RequestParam("searchType") String searchType, Model model) {
+        if (query.equals('#'))
+            return "redirect:/home";
+        List<Movie> movies = movieService.searchMovies(query, searchType);
         model.addAttribute("movies", movies);
-        return "index"; // Ensure this matches the name of your HTML template
+        return "movies";
     }
+
+    @PostMapping("/movies/uploadImage/{id}")
+public String uploadImage(@PathVariable Integer id, @RequestParam("image") MultipartFile image, Model model) {
+    try {
+        movieService.uploadImage(id, image);
+    } catch (IllegalArgumentException e) {
+        model.addAttribute("errorMessage", e.getMessage());
+        List<Movie> movies = movieService.getAllMovies(); // Ensure movies are loaded
+        model.addAttribute("movies", movies);
+        return "index"; // Return the same view
+    }
+    return "redirect:/";
+}
 }
