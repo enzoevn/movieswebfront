@@ -19,7 +19,7 @@ public class Movie {
     private String genre;
     private String synopsis;
     private String coverImage;
-    private List<Actor> actors; 
+    private List<Actor> actors;
 
     
 

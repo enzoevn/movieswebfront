@@ -106,6 +106,9 @@ public class MovieService implements IMovieService {
                 e.printStackTrace();
             }
         }
+        else {
+            throw new IllegalArgumentException("Image file is empty");
+        }
         // Update the movie's image URL in the database
         RestTemplate restTemplate = new RestTemplate();
         Movie movie = restTemplate.getForObject(baseUrl + "/" + id, Movie.class);
