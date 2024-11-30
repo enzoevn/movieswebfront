@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
 import es.uah.movieswebfront.service.IActorService;
