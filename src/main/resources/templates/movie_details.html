@@ -17,6 +17,7 @@
                     <p><strong>Director:</strong> <span th:text="${movie.director}">Director Name</span></p>
                     <p><strong>Genre:</strong> <span th:text="${movie.genre}">Genre</span></p>
                     <p><strong>Year:</strong> <span th:text="${movie.year}">Year</span></p>
+                    <p><strong>Country:</strong> <span th:text="${movie.country.countryName}">Year</span></p>
                     <p><strong>Duration:</strong> <span th:text="${movie.duration}">Duration</span></p>
                     <p><strong>Description:</strong> <span th:text="${movie.synopsis}">Description</span></p>
                     <a th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Edit</a>
