@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class MovieService implements IMovieService {
+public class MovieServiceImp implements IMovieService {
 
     private final String baseUrl = "http://localhost:8001/movies";
 
