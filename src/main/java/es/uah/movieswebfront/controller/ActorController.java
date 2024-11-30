@@ -14,6 +14,7 @@ import es.uah.movieswebfront.service.IActorService;
 import es.uah.movieswebfront.service.ICountryService;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -58,8 +59,8 @@ public class ActorController {
         return "redirect:/actors";
     }
 
-    @GetMapping("/delete")
-    public String deleteActor(Integer id) {
+    @PostMapping("/delete/{id}")
+    public String deleteActor(@PathVariable Integer id) {
         actorService.deleteActor(id);
         return "redirect:/actors";
     }
