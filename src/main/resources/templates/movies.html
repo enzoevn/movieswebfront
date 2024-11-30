@@ -38,7 +38,9 @@
                             <!-- Buttons Div -->
                             <div>
                                 <a th:href="@{/movies/details/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Details</a>
-                                <a th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Edit</a>
+                                <form th:action="@{/movies/edit/{id}(id=${movie.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                </form>
                                 <a th:href="@{/movies/addActor/{id}(id=${movie.id})}" class="btn btn-secondary btn-sm">Add Actor</a>
                                 <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
                                     <input type="hidden" name="_method" value="delete" />
