@@ -6,17 +6,14 @@
 <header th:replace="~{fragments/header :: header}"></header>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="content">
-    <!-- <aside th:fragment="content">
-        <h3>Movies List</h3>
-        <ul>
-            <li th:each="genre : ${uniqueGenres}">
-                <a th:href="@{'/movies/genre/' + ${genre}}" th:text="${genre}"></a>
-        </ul>
-    </aside> -->
     <main>
         <div class="container mt-5 pt-5">
             <!-- Your content here -->
-            <h1>List Movies</h1>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>List Movies</h1>
+                <a th:href="@{/movies/create}" class="btn btn-primary">Create Movie</a>
+            </div>
             <div th:if="${movies != null}">
                 <h5>Search Results</h5>
                 <ul class="list-group">
