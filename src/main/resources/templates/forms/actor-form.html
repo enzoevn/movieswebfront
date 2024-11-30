@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | ' + ${formTitle})}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+<div class="content">
+    <main>
+        <div class="container mt-5 pt-5">
+            <!-- Dynamic Form Title -->
+            <h1 th:text="${formTitle}">Actor Form</h1>
+            
+            <!-- Dynamic Form -->
+            <form th:action="@{${formAction}}" th:object="${actor}" method="post" enctype="multipart/form-data">
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                    Please correct the following errors:
+                    <ul>
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="_method" value="put" th:if="${formAction == '/actors/update'}"/>
+                <input type="hidden" th:field="*{id}" />
+                <!-- <input type="hidden" name="isCreate" th:value="${isCreate}"> -->
+                
+                <!-- Actor Fields -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="title" th:field="*{name}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="birthDate" class="form-label">Birth Date</label>
+                    <input type="date" class="form-control" id="birthDate" th:field="*{birthDate}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="birthCountry" class="form-label">Country</label>
+                    <select class="form-control" id="birthCountry" th:field="*{birthCountry}" required>
+                        <option th:if="${actor.birthCountry == null}" value="">-- Select a Country --</option>
+                        <option selected th:if="${actor.birthCountry != null}"
+                                th:value="${actor.birthCountry.id}"
+                                th:text="${actor.birthCountry.countryName}">
+                        </option>
+                        <option th:each="eachcountry : ${countries}"
+                                th:if="${eachcountry.id != actor.birthCountry?.id}" 
+                                th:value="${eachcountry.id}"
+                                th:text="${eachcountry.countryName}">
+                        </option>
+                    </select>
+                </div>
+                
+                <!-- Dynamic Submit Button -->
+                <button type="submit" class="btn btn-primary" th:text="${buttonText}">Save</button>
+                <a th:href="@{/actors}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </main>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
