@@ -10,12 +10,8 @@ public interface IMovieService {
 
     List<Movie> getAllMovies();
     Movie getMovieById(Integer id);
-    void saveMovie(Movie movie);
     void deleteMovie(Integer id);
-    List<Movie> getMoviesByTitle(String title);
-    List<Movie> getMoviesByYear(Integer year);
-    List<Movie> getMoviesByGenre(String genre);
-    List<Movie> getMoviesByActor(String actor);
+    void updateMovie(Movie movie);
     List<Movie> searchMovies(String query, String searchType);
     void uploadImage(Integer id, MultipartFile image);
 

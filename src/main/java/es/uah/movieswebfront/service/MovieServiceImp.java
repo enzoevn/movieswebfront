@@ -32,47 +32,9 @@ public class MovieServiceImp implements IMovieService {
     }
 
     @Override
-    public void saveMovie(Movie movie) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(baseUrl, movie, Movie.class);
-    }
-
-    @Override
     public void deleteMovie(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete(baseUrl + "/" + id);
-    }
-
-    @Override
-    public List<Movie> getMoviesByTitle(String title) {
-        RestTemplate restTemplate = new RestTemplate();
-        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/title?title=" + title, Movie[].class);
-        assert movies != null;
-        return Arrays.asList(movies);
-    }
-
-    @Override
-    public List<Movie> getMoviesByYear(Integer year) {
-        RestTemplate restTemplate = new RestTemplate();
-        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/year?year=" + year, Movie[].class);
-        assert movies != null;
-        return Arrays.asList(movies);
-    }
-
-    @Override
-    public List<Movie> getMoviesByGenre(String genre) {
-        RestTemplate restTemplate = new RestTemplate();
-        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/genre/" + genre, Movie[].class);
-        assert movies != null;
-        return Arrays.asList(movies);
-    }
-
-    @Override
-    public List<Movie> getMoviesByActor(String actor) {
-        RestTemplate restTemplate = new RestTemplate();
-        Movie[] movies = restTemplate.getForObject(baseUrl + "/search/actor?actor=" + actor, Movie[].class);
-        assert movies != null;
-        return Arrays.asList(movies);
     }
 
     @Override
@@ -118,5 +80,11 @@ public class MovieServiceImp implements IMovieService {
         System.out.println("Updating movie: " + movie);
 
         restTemplate.put(baseUrl + "/" + id, movie);
+    }
+
+    @Override
+    public void updateMovie(Movie movie) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(baseUrl + "/" + movie.getId(), movie);
     }
 }
