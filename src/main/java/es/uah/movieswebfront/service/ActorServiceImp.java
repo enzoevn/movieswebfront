@@ -27,14 +27,14 @@ public class ActorServiceImp implements IActorService {
 
     @Override
     public Actor saveActor(Actor actor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveActor'");
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.postForObject(baseUrl, actor, Actor.class);
     }
 
     @Override
     public void deleteActor(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteActor'");
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(baseUrl + "/" + id);
     }
 
 }
