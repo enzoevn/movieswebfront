@@ -40,7 +40,7 @@ public class MovieServiceImp implements IMovieService {
     @Override
     public List<Movie> searchMovies(String query, String searchType) {
         RestTemplate restTemplate = new RestTemplate();
-        if (query.equals("")) {
+        if (query.equals("") || query.equals("#")) {
             return getAllMovies();
         }
         Movie[] movies = restTemplate.getForObject(baseUrl + "/search/" + searchType + "/" + query, Movie[].class);
@@ -80,11 +80,26 @@ public class MovieServiceImp implements IMovieService {
         System.out.println("Updating movie: " + movie);
 
         restTemplate.put(baseUrl + "/" + id, movie);
+        // wait for the image to be uploaded
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void updateMovie(Movie movie) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(baseUrl + "/" + movie.getId(), movie);
+    }
+
+    @Override
+    public String getDirector(Integer id) {
+        RestTemplate restTemplate = new RestTemplate();
+        Movie movie = restTemplate.getForObject(baseUrl + "/" + id, Movie.class);
+        assert movie != null;
+        String director = movie.getDirector();
+        return director;
     }
 }

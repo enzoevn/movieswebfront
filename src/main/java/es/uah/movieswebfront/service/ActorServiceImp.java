@@ -21,8 +21,8 @@ public class ActorServiceImp implements IActorService {
 
     @Override
     public Actor getActorById(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getActorById'");
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(baseUrl + "/" + id, Actor.class);
     }
 
     @Override

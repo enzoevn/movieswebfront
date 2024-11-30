@@ -14,5 +14,6 @@ public interface IMovieService {
     void updateMovie(Movie movie);
     List<Movie> searchMovies(String query, String searchType);
     void uploadImage(Integer id, MultipartFile image);
+    String getDirector(Integer id);
 
 }

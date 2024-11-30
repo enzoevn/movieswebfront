@@ -9,7 +9,7 @@
     <main>
         <div class="container mt-5 pt-5">
             <h1>Edit Movie</h1>
-            <form th:action="@{/movies/save}" th:object="${movie}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/movies/update}" th:object="${movie}" method="post" enctype="multipart/form-data">
                 <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role='alert'>
                     Please correct the following errors:
                     <ul>
@@ -43,36 +43,38 @@
                     <label for="synopsis" class="form-label">Synopsis</label>
                     <textarea class="form-control" id="synopsis" th:field="*{synopsis}" rows="3" required></textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="synopsis" class="form-label">Duration</label>
+                    <textarea class="form-control" id="synopsis" th:field="*{duration}" rows="3" required></textarea>
+                </div>
                 
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="country" class="form-label">Country</label>
                     <select class="form-control" id="country" th:field="*{country}" required>
-                        <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.id}"></option>
+                        <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.countryName}"></option>
                     </select>
                 </div>
                 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="coverImage" class="form-label">Cover Image</label>
                     <input type="file" class="form-control-file" id="coverImage" name="coverImage">
                     <img th:src="@{${movie.coverImage}}" alt="Movie Cover" class="img-thumbnail mt-2" style="width: 150px; height: auto;">
-                </div>
+                </div> -->
 
                 <div class="mb-3">
-                    <label for="actors" class="form-label">Actors</label>
-                    <div th:each="actor : ${actors}">
-                        <input type="hidden" th:field="*{actors}" />
-                        <div class="form-check form-check-inline">
-                            <input class="form-check input" type="checkbox" th:id="${'actor-' + actor.id}" th:value="${actor.id}" th:field="*{actors}" th:checked="${#lists.contains(movie.actors, actor.id)}">
-                            <label class="form-check label" th:for="${'actor-' + actor.id}" th:text="${actor.name}"></label>
-                        </div>                        
+                    <label for="actors" class="form-label">Add Actors</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <select class="form-select" multiple aria-label="Multiple select example" id="actors" name="actors" required>
+                            <option th:each="actor : ${actors}" 
+                                    th:value="${actor.id}" 
+                                    th:text="${actor.name}">
+                            </option>
+                        </select>
                     </div>
-                </div> -->
+                </div>
                 
                 <button type="submit" class="btn btn-primary">Save</button>
-                <a th:href="@{/movies}" class="btn btn-secondary">Cancel</a>
-
-
-                
+                <a th:href="@{/movies}" class="btn btn-secondary">Cancel</a>                
             </form>
         </div>
     </main>
