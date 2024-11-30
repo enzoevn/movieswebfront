@@ -9,5 +9,6 @@ public interface IActorService {
     Actor getActorById(Integer id);
     Actor saveActor(Actor actor);
     void deleteActor(Integer id);
+    void updateActor(Actor actor);
 
 }

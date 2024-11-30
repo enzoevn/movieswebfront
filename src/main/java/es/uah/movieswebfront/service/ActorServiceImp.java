@@ -37,4 +37,10 @@ public class ActorServiceImp implements IActorService {
         restTemplate.delete(baseUrl + "/" + id);
     }
 
+    @Override
+    public void updateActor(Actor actor) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(baseUrl + "/" + actor.getId(), actor);
+    }
+
 }

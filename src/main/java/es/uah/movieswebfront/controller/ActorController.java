@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
 import es.uah.movieswebfront.service.IActorService;
@@ -64,5 +66,30 @@ public class ActorController {
         actorService.deleteActor(id);
         return "redirect:/actors";
     }
+
+    @PostMapping("/edit/{id}")
+    public String updateActor(Model model, @PathVariable Integer id) {
+        Actor actor = actorService.getActorById(id);
+        Country country = actor.getBirthCountry();
+        model.addAttribute("actor", actor);
+        model.addAttribute("country", country);
+        model.addAttribute("countries", countryService.getAllCountries());
+        model.addAttribute("formTitle", "Edit Actor");
+        model.addAttribute("formAction", "/actors/update");
+        model.addAttribute("buttonText", "Update Actor");
+        return "forms/actor-form";
+    }
+
+    @PostMapping("/update")
+    public String updateActor(@RequestParam Integer id, @RequestParam String name, @RequestParam String birthDate, @RequestParam("birthCountry") Integer countryId) {
+        Actor actor = new Actor();
+        actor.setId(id);
+        actor.setName(name);
+        actor.setBirthDate(birthDate);
+        actor.setBirthCountry(countryService.getCountryById(countryId));
+        actorService.updateActor(actor);
+        return "redirect:/actors";
+    }
+
 
 }
