@@ -1,24 +1,28 @@
-<!-- src/main/resources/templates/edit-movie.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | Edit Movie')}"></head>
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | ' + ${formTitle})}"></head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="content">
     <main>
         <div class="container mt-5 pt-5">
-            <h1>Edit Movie</h1>
-            <form th:action="@{/movies/update}" th:object="${movie}" method="post" enctype="multipart/form-data">
-                <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role='alert'>
+            <!-- Dynamic Form Title -->
+            <h1 th:text="${formTitle}">Movie Form</h1>
+            
+            <!-- Dynamic Form -->
+            <form th:action="@{${formAction}}" th:object="${movie}" method="post" enctype="multipart/form-data">
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
                     Please correct the following errors:
                     <ul>
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                     </ul>
                 </div>
-                <input type="hidden" name="_method" value="put" />
+                <input type="hidden" name="_method" value="put" th:if="${formAction == '/movies/update'}"/>
                 <input type="hidden" th:field="*{id}" />
+                <input type="hidden" name="isCreate" th:value="${isCreate}">
                 
+                <!-- Movie Fields -->
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" class="form-control" id="title" th:field="*{title}" required>
@@ -44,44 +48,46 @@
                     <textarea class="form-control" id="synopsis" th:field="*{synopsis}" rows="3" required></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="synopsis" class="form-label">Duration</label>
-                    <textarea class="form-control" id="synopsis" th:field="*{duration}" rows="3" required></textarea>
+                    <label for="duration" class="form-label">Duration</label>
+                    <input class="form-control" id="duration" th:field="*{duration}" rows="3" required></input>
                 </div>
                 
                 <div class="mb-3">
                     <label for="country" class="form-label">Country</label>
                     <select class="form-control" id="country" th:field="*{country}" required>
-                        <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.countryName}"></option>
+                        <option th:if="${movie.country == null}" value="">-- Select a Country --</option>
+                        <option selected th:if="${movie.country != null}"
+                                th:value="${movie.country.id}"
+                                th:text="${movie.country.countryName}">
+                        </option>
+                        <option th:each="eachcountry : ${countries}"
+                                th:if="${eachcountry.id != movie.country?.id}" 
+                                th:value="${eachcountry.id}"
+                                th:text="${eachcountry.countryName}">
+                        </option>
                     </select>
                 </div>
                 
-                <!-- <div class="mb-3">
-                    <label for="coverImage" class="form-label">Cover Image</label>
-                    <input type="file" class="form-control-file" id="coverImage" name="coverImage">
-                    <img th:src="@{${movie.coverImage}}" alt="Movie Cover" class="img-thumbnail mt-2" style="width: 150px; height: auto;">
-                </div> -->
-
                 <div class="mb-3">
-                    <label for="actors" class="form-label">Add Actors</label>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <select class="form-select" multiple aria-label="Multiple select example" id="actors" name="actors" required>
-                            <option th:each="actor : ${actors}" 
-                                    th:value="${actor.id}" 
-                                    th:text="${actor.name}">
-                            </option>
-                        </select>
-                    </div>
+                    <label for="actors" class="form-label">Actors</label>
+                    <select class="form-select" multiple aria-label="Multiple select example" id="actors" name="actors" required>
+                        <option th:if="${movie.actors == null}" value="">-- Select Actors --</option>
+                        <option th:each="actor : ${movie.actors}" selected th:value="${actor.id}" th:text="${actor.name}"></option>
+                        <option th:each="eachactor : ${actors}"
+                                th:if="${movie.actors == null or !#lists.contains(movie.actors, eachactor)}"
+                                th:value="${eachactor.id}"
+                                th:text="${eachactor.name}">
+                        </option>
+                    </select>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a th:href="@{/movies}" class="btn btn-secondary">Cancel</a>                
+                <!-- Dynamic Submit Button -->
+                <button type="submit" class="btn btn-primary" th:text="${buttonText}">Save</button>
+                <a th:href="@{/movies}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </main>
 </div>
-<!-- Include the modal fragments -->
-<div th:insert="~{/modal/modal-error :: modal-error }"></div>
-
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 </html>

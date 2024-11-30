@@ -91,19 +91,39 @@ public class MovieController {
         List<Actor> selectedActors = movie.getActors();
         Country country = movie.getCountry();
 
-        if (selectedActors == null) {
-            selectedActors = new ArrayList<>();
-        }
+        // if (selectedActors == null) {
+        //     selectedActors = new ArrayList<>();
+        // }
 
-        if (country == null) {
-            country = new Country();
-        }
+        // if (country == null) {
+        //     country = new Country();
+        // }
 
         model.addAttribute("movie", movie);
         model.addAttribute("countries", countryService.getAllCountries());
         model.addAttribute("actors", actorService.getAllActors());
         model.addAttribute("movieActor", selectedActors);
         model.addAttribute("country", country);
+        model.addAttribute("formTitle", "Edit Movie");
+        model.addAttribute("formAction", "/movies/update");
+        model.addAttribute("buttonText", "Update Movie");
+        return "edit-movie";
+    }
+
+    @GetMapping("/create")
+    public String createMovie(Model model) {
+        Movie movie = new Movie();
+        List<Actor> selectedActors = new ArrayList<>();
+        Country country = new Country();
+
+        model.addAttribute("movie", movie);
+        model.addAttribute("countries", countryService.getAllCountries());
+        model.addAttribute("actors", actorService.getAllActors());
+        model.addAttribute("movieActor", selectedActors);
+        model.addAttribute("country", country);
+        model.addAttribute("formTitle", "Create Movie");
+        model.addAttribute("formAction", "/movies/save");
+        model.addAttribute("buttonText", "Create Movie");
         return "edit-movie";
     }
 
@@ -112,7 +132,7 @@ public class MovieController {
             @RequestParam("genre") String genre, @RequestParam("year") Integer year,
             @RequestParam("country") Integer countryId, @RequestParam("actors") List<Integer> actors,
             @RequestParam("director") String director, @RequestParam("duration") Integer duration,
-            @RequestParam("synopsis") String synopsis) {
+            @RequestParam("synopsis") String synopsis, Model model) {
         Movie movie = new Movie();
         movie.setId(id);
         movie.setTitle(title);
@@ -130,6 +150,29 @@ public class MovieController {
         movie.setActors(selectedActors);
         movieService.updateMovie(movie);
         return "redirect:/movies/details/" + id;
+    }
+
+    @PostMapping("/save")
+    public String saveMovie(@RequestParam("title") String title,
+            @RequestParam("genre") String genre, @RequestParam("year") Integer year,
+            @RequestParam("country") Integer countryId, @RequestParam("actors") List<Integer> actors,
+            @RequestParam("director") String director, @RequestParam("duration") Integer duration,
+            @RequestParam("synopsis") String synopsis, Model model) {
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setGenre(genre);
+        movie.setYear(year);
+        movie.setCountry(countryService.getCountryById(countryId));
+        movie.setDirector(director);
+        movie.setDuration(duration);
+        movie.setSynopsis(synopsis);
+        List<Actor> selectedActors = new ArrayList<>();
+        for (Integer actorId : actors) {
+            selectedActors.add(actorService.getActorById(actorId));
+        }
+        movie.setActors(selectedActors);
+        movieService.createMovie(movie);
+        return "redirect:/movies";
     }
 
 }

@@ -95,6 +95,12 @@ public class MovieServiceImp implements IMovieService {
     }
 
     @Override
+    public void createMovie(Movie movie) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject(baseUrl, movie, Movie.class);
+    }
+
+    @Override
     public String getDirector(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         Movie movie = restTemplate.getForObject(baseUrl + "/" + id, Movie.class);

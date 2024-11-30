@@ -12,6 +12,7 @@ public interface IMovieService {
     Movie getMovieById(Integer id);
     void deleteMovie(Integer id);
     void updateMovie(Movie movie);
+    void createMovie(Movie movie);
     List<Movie> searchMovies(String query, String searchType);
     void uploadImage(Integer id, MultipartFile image);
     String getDirector(Integer id);
