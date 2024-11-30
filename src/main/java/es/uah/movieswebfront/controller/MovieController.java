@@ -107,7 +107,7 @@ public class MovieController {
         model.addAttribute("formTitle", "Edit Movie");
         model.addAttribute("formAction", "/movies/update");
         model.addAttribute("buttonText", "Update Movie");
-        return "edit-movie";
+        return "forms/movie-form";
     }
 
     @GetMapping("/create")
@@ -124,7 +124,7 @@ public class MovieController {
         model.addAttribute("formTitle", "Create Movie");
         model.addAttribute("formAction", "/movies/save");
         model.addAttribute("buttonText", "Create Movie");
-        return "edit-movie";
+        return "forms/movie-form";
     }
 
     @PostMapping("/update")
