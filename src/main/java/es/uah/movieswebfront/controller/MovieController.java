@@ -3,10 +3,12 @@ package es.uah.movieswebfront.controller;
 import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
 import es.uah.movieswebfront.model.Movie;
+import es.uah.movieswebfront.paginator.PageRender;
 import es.uah.movieswebfront.service.IActorService;
 import es.uah.movieswebfront.service.ICountryService;
 import es.uah.movieswebfront.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +43,22 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    // @GetMapping
+    // public String getMovies(Model model) {
+    //     List<Movie> movies = getAllMovies();
+    //     Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
+    //     model.addAttribute("movies", movies);
+    //     model.addAttribute("uniqueGenres", uniqueGenres);
+    //     return "movies";
+    // }
+
     @GetMapping
-    public String getMovies(Model model) {
-        List<Movie> movies = getAllMovies();
-        Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
-        model.addAttribute("movies", movies);
-        model.addAttribute("uniqueGenres", uniqueGenres);
+    public String getMovies(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
+        Page<Movie> moviePage = movieService.getAllMovies(pageable);
+        PageRender<Movie> pageRender = new PageRender<>("/movies", moviePage);
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("page", pageRender);
         return "movies";
     }
 
@@ -59,9 +74,16 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public String searchMovies(@RequestParam("query") String query, String searchType, Model model) {
+    public String searchMovies(@RequestParam("query") String query, String searchType, @RequestParam(defaultValue = "0") int page, Model model) {
         List<Movie> movies = movieService.searchMovies(query, searchType);
-        model.addAttribute("movies", movies);
+        int pageSize = 5; // 5 movies per page
+        int start = page * pageSize;
+        int end = Math.min((start + pageSize), movies.size());
+        List<Movie> paginatedMovies = movies.subList(start, end);
+        Page<Movie> moviePage = new PageImpl<>(paginatedMovies, PageRequest.of(page, pageSize), movies.size());
+        PageRender<Movie> pageRender = new PageRender<>("/movies/search?query=" + query + "&searchType=" + searchType, moviePage);
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("page", pageRender);
         return "movies";
     }
 
@@ -71,9 +93,11 @@ public class MovieController {
             movieService.uploadImage(id, image);
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            List<Movie> movies = movieService.getAllMovies();
+            Page<Movie> movies = movieService.getAllMovies(PageRequest.of(0, 5));
+            PageRender<Movie> pageRender = new PageRender<>("/movies", movies);
             model.addAttribute("movies", movies);
-            return "movies"; // Return the same view
+            model.addAttribute("page", pageRender);
+            return "movies";
         }
         // Update the page with the new image
         return "redirect:/movies/details/" + id;

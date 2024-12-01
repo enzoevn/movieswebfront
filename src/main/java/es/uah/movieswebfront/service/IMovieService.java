@@ -4,6 +4,8 @@ import es.uah.movieswebfront.model.Movie;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IMovieService {
@@ -16,5 +18,6 @@ public interface IMovieService {
     List<Movie> searchMovies(String query, String searchType);
     void uploadImage(Integer id, MultipartFile image);
     String getDirector(Integer id);
+    Page<Movie> getAllMovies(Pageable pageable);
 
 }

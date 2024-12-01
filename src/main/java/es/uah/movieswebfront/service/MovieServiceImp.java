@@ -1,6 +1,10 @@
 package es.uah.movieswebfront.service;
 
 import es.uah.movieswebfront.model.Movie;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,5 +111,16 @@ public class MovieServiceImp implements IMovieService {
         assert movie != null;
         String director = movie.getDirector();
         return director;
+    }
+
+    @Override
+    public Page<Movie> getAllMovies(Pageable pageable) {
+        RestTemplate restTemplate = new RestTemplate();
+        Movie[] movies = restTemplate.getForObject(baseUrl, Movie[].class);
+        assert movies != null;
+        List<Movie> movieList = Arrays.asList(movies);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), movieList.size());
+        return new PageImpl<>(movieList.subList(start, end), pageable, movieList.size());
     }
 }
