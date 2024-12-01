@@ -20,7 +20,7 @@
                     <p><strong>Country:</strong> <span th:text="${movie.country.countryName}">Year</span></p>
                     <p><strong>Duration:</strong> <span th:text="${movie.duration}">Duration</span></p>
                     <p><strong>Description:</strong> <span th:text="${movie.synopsis}">Description</span></p>
-                    <a th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Edit</a>
+                    <a th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-warning btn-sm">Edit</a>
                     <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="get" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
                         <input type="hidden" name="_method" value="delete" />
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
