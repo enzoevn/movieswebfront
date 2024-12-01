@@ -69,22 +69,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version> <!-- O la versión más reciente -->
-                <configuration>
-                    <source>${java.version}</source> <!-- Usa la versión de Java declarada -->
-                    <target>${java.version}</target> <!-- Usa la versión de Java declarada -->
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.36</version> <!-- Verifica la versión más reciente -->
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
