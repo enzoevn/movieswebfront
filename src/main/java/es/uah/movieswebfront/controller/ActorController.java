@@ -3,6 +3,9 @@ package es.uah.movieswebfront.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
+import es.uah.movieswebfront.paginator.PageRender;
 import es.uah.movieswebfront.service.IActorService;
 import es.uah.movieswebfront.service.ICountryService;
 
@@ -29,9 +33,12 @@ public class ActorController {
     private ICountryService countryService;
 
     @GetMapping("")
-    public String getAllActors(Model model) {
-        List<Actor> actors = actorService.getAllActors();
-        model.addAttribute("actors", actors);
+    public String getAllActors(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // 5 actors per page
+        Page<Actor> actorPage = actorService.getAllActors(pageable);
+        PageRender<Actor> pageRender = new PageRender<>("/actors", actorPage);
+        model.addAttribute("actors", actorPage.getContent());
+        model.addAttribute("page", pageRender);
         return "actors";
     }
     
