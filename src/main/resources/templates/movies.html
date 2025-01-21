@@ -12,7 +12,7 @@
             
             <div class="d-flex justify-content-between align-items-center">
                 <h1>List Movies</h1>
-                <a th:href="@{/movies/create}" class="btn btn-primary">Create Movie</a>
+                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/movies/create}" class="btn btn-primary">Create Movie</a>
             </div>
             <div th:if="${movies != null}">
                 <h5>Search Results</h5>
@@ -22,13 +22,13 @@
                         <!-- Top Section: Buttons -->
                         <div class="position-absolute top-0 end-0 d-flex flex-wrap gap-2 p-2">
                             <a th:href="@{/movies/details/{id}(id=${movie.id})}" class="btn btn-primary btn-sm">Details</a>
-                            <form th:action="@{/movies/edit/{id}(id=${movie.id})}" method="get" class="d-inline">
+                            <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/movies/edit/{id}(id=${movie.id})}" method="get" class="d-inline">
                                 <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                             </form>
-                            <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="get" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                            <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/movies/delete/{id}(id=${movie.id})}" method="get" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
-                            <form th:action="@{/movies/uploadImage/{id}(id=${movie.id})}" method="post" enctype="multipart/form-data" class="d-inline">
+                            <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/movies/uploadImage/{id}(id=${movie.id})}" method="post" enctype="multipart/form-data" class="d-inline">
                                 <input type="file" name="image" class="form-control form-control-sm w-auto d-inline">
                                 <button type="submit" class="btn btn-info btn-sm">Upload Image</button>
                             </form>
