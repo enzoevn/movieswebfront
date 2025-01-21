@@ -8,18 +8,19 @@
     --primary-color: #03dac6;
     --secondary-color: #3700b3;
     --error-color: #cf6679;
-    /* --navbar-height: 10vh; */
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     max-height: 100vh;
 }
 
 nav {
     background-color: var(--background-color-nav);
-    height: 60px;
+    max-height: 10vh;
 }
 
 main {
-    padding-top: 60px;
+    padding-top: 10vh;
   }
