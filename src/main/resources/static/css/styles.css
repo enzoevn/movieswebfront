@@ -18,9 +18,9 @@ body {
 
 nav {
     background-color: var(--background-color-nav);
-    max-height: 10vh;
+    max-height: 25vh;
 }
 
 main {
     padding-top: 10vh;
-  }
+}
