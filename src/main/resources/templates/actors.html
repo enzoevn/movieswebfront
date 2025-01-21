@@ -17,14 +17,10 @@
                 <ul class="list-group">
                     <li th:each="actor : ${actors}" class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="d-flex">
-                            <!-- Image Div -->
-                            <!-- <div class="me-3">
-                                <img th:src="@{${actors.coverImage}}" alt="Movie Cover" class="img-thumbnail" style="width: 150px; height: auto;">
-                            </div> -->
                             
                             <!-- Attributes Div -->
                             <div class="me-3">
-                                <h5 th:text="${actor.name}">Movie Title</h5>
+                                <h5 th:text="${actor.name}">Actor Name</h5>
                                 <p><strong>Birth Date:</strong> <span th:text="${actor.birthDate}">Actor Name</span></p>
                                 <p><strong>Country:</strong> <span th:text="${actor.birthCountry.countryName}">Birth Country</span></p>
                             </div>
@@ -38,10 +34,7 @@
                                     <input type="hidden" name="_method" value="delete" />
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
-                                <!-- <form th:action="@{/actors/uploadImage/{id}(id=${actors.id})}" method="post" enctype="multipart/form-data" class="d-inline">
-                                    <input type="file" name="image" class="form-control-file mb-2">
-                                    <button type="submit" class="btn btn-info btn-sm">Upload Image</button>
-                                </form> -->
+
                             </div>
                         </div>
                     </li>
