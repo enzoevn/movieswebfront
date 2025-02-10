@@ -20,7 +20,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     RestTemplate template;
 
-    String url = "http://localhost:8090/api/usuarios/usuarios";
+    String url = "http://localhost:8091/api/users";
 
     @Override
     public Page<Usuario> buscarTodos(Pageable pageable) {
