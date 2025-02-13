@@ -33,23 +33,6 @@ public class LoginController {
         return "login";
     }
 
-    // @PostMapping("/login")
-    // public String loginPost(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
-    //     System.out.println("Username: " + username);
-    //     System.out.println("Password: " + password);
-    //     // Aquí puedes agregar la lógica para autenticar al usuario usando el servicio de usuarios
-    //     // Por ejemplo, puedes llamar a un servicio que verifique las credenciales del usuario
-    //     // y redirigir al usuario a la página correspondiente si las credenciales son correctas
-
-    //     // Ejemplo de lógica de autenticación (esto debe ser reemplazado con tu lógica real)
-    //     if ("admin@example.com".equals(username) && "password".equals(password)) {
-    //         return "redirect:/movies";
-    //     } else {
-    //         model.addAttribute("msg", "Error al iniciar sesión: Nombre de usuario o contraseña incorrecta, por favor vuelva a intentarlo!");
-    //         return "login";
-    //     }
-    // }
-
     @GetMapping("/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

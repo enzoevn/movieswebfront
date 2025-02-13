@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/cusuarios")
+@RequestMapping("/usuarios")
 public class UsuariosController {
     @Autowired
     IUsuariosService usuariosService;
@@ -64,7 +64,7 @@ public class UsuariosController {
         }
         List<Rol> roles = rolesService.buscarTodos();
         model.addAttribute("allRoles", roles);
-        // usuariosService.guardarUsuario(usuario);
+        usuariosService.guardarUsuario(usuario);
         model.addAttribute("titulo", "Nuevo usuario");
         attributes.addFlashAttribute("msg", "Los datos del usuario fueron guardados!");
         return "redirect:/cusuarios/listado";
@@ -72,25 +72,34 @@ public class UsuariosController {
 
     @PostMapping("/registrar")
     public String registro(Model model, Usuario usuario, RedirectAttributes attributes) {
+        // new user
+
+        System.out.println("Usuario: " + usuario);
         //si existe un usuario con el mismo correo no lo guardamos
         if (usuariosService.buscarUsuarioPorCorreo(usuario.getCorreo())!=null) {
             attributes.addFlashAttribute("msga", "Error al guardar, ya existe el correo!");
             return "redirect:/login";
         }
-        usuario.setEnable(true);
-        Rol rol = rolesService.buscarRolPorId(2);
-        usuario.setRoles(Arrays.asList(rol));
-        // usuariosService.guardarUsuario(usuario);
+        Usuario user = new Usuario();
+        model.addAttribute("username", user.getNombre());
+        model.addAttribute("password", user.getClave());
+        model.addAttribute("email", user.getCorreo());
+        model.addAttribute("enabled", true);
+        model.addAttribute("authorities", Arrays.asList("ROLE_USER"));
+        model.addAttribute("formAction", "/usuarios/guardar");
+
+        usuariosService.guardarUsuario(usuario);
+
         attributes.addFlashAttribute("msg", "Los datos del registro fueron guardados!");
         return "redirect:/login";
     }
 
     @GetMapping("/registrar")
     public String nuevoRegistro(Model model) {
-        model.addAttribute("titulo", "Nuevo registro");
+        model.addAttribute("formTitle", "Register");
         Usuario usuario = new Usuario();
         model.addAttribute("usuario", usuario);
-        return "/registro";
+        return "register";
     }
 
     @GetMapping("/editar/{id}")
@@ -113,7 +122,7 @@ public class UsuariosController {
             attributes.addFlashAttribute("msg", "Usuario no encontrado!");
         }
 
-        return "redirect:/cusuarios/listado";
+        return "redirect:/usuarios/listado";
     }
 
 }

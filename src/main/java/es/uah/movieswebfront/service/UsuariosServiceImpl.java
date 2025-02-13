@@ -69,6 +69,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Override
     public void guardarUsuario(Usuario usuario) {
+        System.out.println("Usuario: " + usuario);
         if (usuario.getIdUsuario() != null && usuario.getIdUsuario() > 0) {
             template.put(url, usuario);
         } else {

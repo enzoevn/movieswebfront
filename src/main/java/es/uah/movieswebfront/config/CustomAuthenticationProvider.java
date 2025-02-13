@@ -31,16 +31,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
 
         final String usuario = authentication.getName();
+        System.out.println("Usuario: " + usuario);
         String password = authentication.getCredentials().toString();
+        System.out.println("Password: " + password);
 
         Usuario usuarioLogueado = usuariosService.login(usuario, password);
+        System.out.println("Usuario logueado: " + usuarioLogueado);
         if (usuarioLogueado != null) {
             final List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
+
+            
             for (Rol rol : usuarioLogueado.getRoles()) {
+                System.out.println("Rol: " + rol);
                 grantedAuths.add(new SimpleGrantedAuthority(rol.getAuthority()));
             }
             final UserDetails principal = new User(usuario, password, grantedAuths);
             final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+            System.out.println("Usuario autenticado: " + usuario + " con roles: " + grantedAuths);
             return auth;
         }
         return null;
