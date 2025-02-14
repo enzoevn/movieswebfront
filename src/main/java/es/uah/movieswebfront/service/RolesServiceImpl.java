@@ -14,7 +14,7 @@ public class RolesServiceImpl implements IRolesService {
     @Autowired
     RestTemplate template;
 
-    String url = "http://localhost:8091/api/roles";
+    String url = "http://localhost:8091/roles";
 
     @Override
     public List<Rol> buscarTodos() {
@@ -28,24 +28,18 @@ public class RolesServiceImpl implements IRolesService {
         return rol;
     }
 
-    // @Override
-    // public void guardarRol(Rol rol) {
-    //     if (rol.getIdRol() != null && rol.getIdRol() > 0) {
-    //         template.put(url, rol);
-    //     } else {
-    //         rol.setIdRol(0);
-    //         template.postForObject(url, rol, String.class);
-    //     }
-    // }
+    @Override
+    public void guardarRol(Rol rol) {
+        if (rol.getIdRol() != null && rol.getIdRol() > 0) {
+            template.put(url, rol);
+        } else {
+            rol.setIdRol(0);
+            template.postForObject(url, rol, String.class);
+        }
+    }
 
     @Override
     public void eliminarRol(Integer idRol) {
         template.delete(url + "/" + idRol);
-    }
-
-    @Override
-    public void guardarRol(Rol rol) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'guardarRol'");
     }
 }

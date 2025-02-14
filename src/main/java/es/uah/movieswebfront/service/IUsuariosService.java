@@ -21,4 +21,6 @@ public interface IUsuariosService {
 
     void eliminarUsuario(Integer idUsuario);
 
+    void actualizarUsuario(Usuario usuario);
+
 }

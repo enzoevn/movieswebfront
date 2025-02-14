@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesApp | Detalle del Usuario')}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <main>
+        <div class="mt-5 pt-5">
+            <div class="card bg-light">
+                <div class="card-header" th:text="${titulo}"></div>
+                <div class="card-body">
+
+                    <ul class="list-group">
+                        <li class="list-group-item active">ID: <span th:text="${usuario.idUsuario}"></span></li>
+                        <li class="list-group-item">Nombre: <span th:text="${usuario.nombre}"></span></li>
+                        <li class="list-group-item">Clave: <span th:text="${usuario.clave}"></span></li>
+                        <li class="list-group-item">Correo: <span th:text="${usuario.correo}"></span></li>
+                        <li class="list-group-item">Roles:
+                            <ul>
+                                <li th:each="rol : ${usuario.roles}" th:text="${rol.authority}"></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <hr>
+            <a th:href="@{/usuarios/listado}" class="btn btn-secondary btn-sm">Volver al listado de usuarios</a>
+        </div>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

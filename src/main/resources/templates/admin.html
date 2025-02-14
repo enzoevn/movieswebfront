@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesApp | Panel de Administración')}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <main>
+        <div class="mt-5 pt-5">
+            <div class="card">
+                <h2 class="card-header">Panel de Administración</h2>
+                <div class="card-body">
+                    <p class="card-text">Bienvenido al panel de administración. Desde aquí puede acceder a las diferentes secciones de administración de la aplicación.</p>
+
+                    <div class="list-group">
+                        <a th:href="@{/usuarios/listado}" class="list-group-item list-group-item-action">Gestión de Usuarios</a>
+                        <a th:href="@{/movies}" class="list-group-item list-group-item-action">Gestión de Películas</a>
+                        <a th:href="@{/movies/rates}" class="list-group-item list-group-item-action">Gestion de Ranging de Peliculas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

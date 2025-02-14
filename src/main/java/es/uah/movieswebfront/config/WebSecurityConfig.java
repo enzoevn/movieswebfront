@@ -34,8 +34,8 @@ public class WebSecurityConfig {
                         .loginPage("/login").permitAll()
                         .defaultSuccessUrl("/movies", true))
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/js/**", "/css/**", "/login", "/register", "/").permitAll()
-                        .requestMatchers("/movies/edit/**").hasRole("ADMIN")
+                        .requestMatchers("/js/**", "/css/**", "/login", "/usuarios/registrar", "/").permitAll()
+                        .requestMatchers("/movies/edit/**", "/usuarios/editar/**", "usuarios/listado/**").hasRole("ADMIN")
                         .requestMatchers("/movies", "/actors").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )

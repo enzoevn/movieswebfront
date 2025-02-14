@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head (pageTitle='CursosApp | Gestión de Calificaciones de Películas')}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <main>
+        <div class="mt-5 pt-5">
+            <div class="card">
+                <h2 class="card-header">Gestión de Calificaciones de Películas</h2>
+                <div class="card-body">
+                    <p class="card-text">Aquí puede gestionar las calificaciones de las películas.</p>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Título de la Película</th>
+                            <th>Rating Actual</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="movieRate : ${movieRates}">
+                            <td th:text="${movieRate.movie.title}"></td>
+                            <td th:text="${movieRate.averageRating}"></td> <!-- Asumiendo que tienes un campo averageRating -->
+                            <td>
+                                <form th:action="@{/movies/rates/reset/{movieId}(movieId=${movieRate.movie.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger btn-sm">Reiniciar Rating</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <a th:href="@{/admin}" class="btn btn-secondary btn-sm">Volver al Panel de Administración</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

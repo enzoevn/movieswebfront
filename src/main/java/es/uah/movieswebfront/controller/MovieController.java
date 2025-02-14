@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -197,6 +198,22 @@ public class MovieController {
         movie.setActors(selectedActors);
         movieService.createMovie(movie);
         return "redirect:/movies";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/rates")
+    public String movieRatesPage(Model model) {
+        // List<MovieRate> movieRates = movieRateService.getAllMovieRates();
+        // model.addAttribute("movieRates", movieRates);
+        model.addAttribute("titulo", "Gestión de Calificaciones de Películas");
+        return "movie_rates"; // Nombre del template
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/rates/reset/{movieId}")
+    public String resetMovieRate(@PathVariable Long movieId) {
+        // movieRateService.resetMovieRate(movieId);
+        return "redirect:/movies/rates";
     }
 
 }

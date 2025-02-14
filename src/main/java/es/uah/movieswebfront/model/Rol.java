@@ -1,10 +1,5 @@
 package es.uah.movieswebfront.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class Rol {
 
     private Integer idRol;
@@ -20,6 +15,27 @@ public class Rol {
             this.idRol = Integer.parseInt(fieldPositions[0]);
             this.authority = fieldPositions[1];
         }
+    }
+
+    public Integer getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public String toString() {
+        return ""+idRol+"-"+this.authority;
     }
 
 }

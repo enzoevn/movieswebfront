@@ -38,7 +38,7 @@ public class UsuariosController {
     public String listadoUsuarios(Model model, @RequestParam(name="page", defaultValue="0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         Page<Usuario> listado = usuariosService.buscarTodos(pageable);
-        PageRender<Usuario> pageRender = new PageRender<Usuario>("/cusuarios/listado", listado);
+        PageRender<Usuario> pageRender = new PageRender<Usuario>("/usuarios/listado", listado);
         model.addAttribute("titulo", "Listado de todos los usuarios");
         model.addAttribute("listadoUsuarios", listado);
         model.addAttribute("page", pageRender);
@@ -55,51 +55,61 @@ public class UsuariosController {
         return "usuarios/formUsuario";
     }
 
-    @PostMapping("/guardar/")
+    @PostMapping("/guardar")
     public String guardarUsuario(Model model, Usuario usuario, RedirectAttributes attributes) {
-        //si existe un usuario con el mismo correo no lo guardamos
-        if (usuariosService.buscarUsuarioPorCorreo(usuario.getCorreo())!=null) {
+    
+        Usuario usuarioExistentePorCorreo = usuariosService.buscarUsuarioPorCorreo(usuario.getCorreo());
+    
+        // Validación de correo único:
+        // - Si estamos creando un nuevo usuario (idUsuario es nulo o 0)
+        // - O si estamos actualizando un usuario, pero el correo ha cambiado y ya existe otro usuario con ese correo.
+        if ((usuario.getIdUsuario() == null || usuario.getIdUsuario() == 0) && usuarioExistentePorCorreo != null) {
             attributes.addFlashAttribute("msga", "Error al guardar, ya existe el correo!");
-            return "redirect:/cusuarios/listado";
-        }
+            return "redirect:/usuarios/listado";
+        } else if (usuarioExistentePorCorreo != null && !usuarioExistentePorCorreo.getIdUsuario().equals(usuario.getIdUsuario())) {
+            attributes.addFlashAttribute("msga", "Error al guardar, ya existe el correo!");
+            return "redirect:/usuarios/listado";
+        }    
+    
         List<Rol> roles = rolesService.buscarTodos();
         model.addAttribute("allRoles", roles);
         usuariosService.guardarUsuario(usuario);
         model.addAttribute("titulo", "Nuevo usuario");
         attributes.addFlashAttribute("msg", "Los datos del usuario fueron guardados!");
-        return "redirect:/cusuarios/listado";
+        return "redirect:/usuarios/listado";
+    }
+
+    @PostMapping("/actualizar")
+    public String actualizarUsuario(Model model, Usuario usuario, RedirectAttributes attributes) {
+        List<Rol> roles = rolesService.buscarTodos();
+        model.addAttribute("allRoles", roles);
+        usuariosService.actualizarUsuario(usuario);
+        attributes.addFlashAttribute("msg", "Los datos del usuario fueron actualizados!");
+        return "redirect:/usuarios/listado";
     }
 
     @PostMapping("/registrar")
     public String registro(Model model, Usuario usuario, RedirectAttributes attributes) {
-        // new user
-
-        System.out.println("Usuario: " + usuario);
         //si existe un usuario con el mismo correo no lo guardamos
         if (usuariosService.buscarUsuarioPorCorreo(usuario.getCorreo())!=null) {
             attributes.addFlashAttribute("msga", "Error al guardar, ya existe el correo!");
             return "redirect:/login";
         }
-        Usuario user = new Usuario();
-        model.addAttribute("username", user.getNombre());
-        model.addAttribute("password", user.getClave());
-        model.addAttribute("email", user.getCorreo());
-        model.addAttribute("enabled", true);
-        model.addAttribute("authorities", Arrays.asList("ROLE_USER"));
-        model.addAttribute("formAction", "/usuarios/guardar");
-
+        usuario.setEnable(true);
+        Rol rol = rolesService.buscarRolPorId(2);
+        usuario.setRoles(Arrays.asList(rol));
         usuariosService.guardarUsuario(usuario);
-
         attributes.addFlashAttribute("msg", "Los datos del registro fueron guardados!");
         return "redirect:/login";
     }
 
     @GetMapping("/registrar")
     public String nuevoRegistro(Model model) {
-        model.addAttribute("formTitle", "Register");
+        model.addAttribute("titulo", "Nuevo registro");
         Usuario usuario = new Usuario();
         model.addAttribute("usuario", usuario);
-        return "register";
+        model.addAttribute("editar", false);
+        return "/registro";
     }
 
     @GetMapping("/editar/{id}")
@@ -109,6 +119,8 @@ public class UsuariosController {
         model.addAttribute("usuario", usuario);
         List<Rol> roles = rolesService.buscarTodos();
         model.addAttribute("allRoles", roles);
+        
+        model.addAttribute("editar", true);
         return "usuarios/formUsuario";
     }
 
@@ -124,5 +136,4 @@ public class UsuariosController {
 
         return "redirect:/usuarios/listado";
     }
-
 }
