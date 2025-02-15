@@ -1,8 +1,6 @@
 package es.uah.movieswebfront.service;
 
 import es.uah.movieswebfront.model.Rate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface IRatesService {
 
