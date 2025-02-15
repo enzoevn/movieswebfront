@@ -3,10 +3,13 @@ package es.uah.movieswebfront.controller;
 import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
 import es.uah.movieswebfront.model.Movie;
+import es.uah.movieswebfront.model.Rate;
 import es.uah.movieswebfront.paginator.PageRender;
 import es.uah.movieswebfront.service.IActorService;
 import es.uah.movieswebfront.service.ICountryService;
 import es.uah.movieswebfront.service.IMovieService;
+import es.uah.movieswebfront.service.IRatesService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -40,6 +43,9 @@ public class MovieController {
     @Autowired
     private IActorService actorService;
 
+    @Autowired
+    private IRatesService rateService;
+
     private List<Movie> getAllMovies() {
         return movieService.getAllMovies();
     }
@@ -66,11 +72,13 @@ public class MovieController {
     @GetMapping("/details/{id}")
     public String getMovieById(Model model, @PathVariable Integer id) {
         Movie movie = movieService.getMovieById(id);
+        Rate rate =  rateService.buscarRatePorMovieId(id);
         List<Movie> movies = getAllMovies();
         Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
         model.addAttribute("movie", movie);
         model.addAttribute("movies", movies);
         model.addAttribute("uniqueGenres", uniqueGenres);
+        model.addAttribute("rate", rate);
         return "movie_details";
     }
 

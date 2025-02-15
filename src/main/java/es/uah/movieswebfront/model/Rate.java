@@ -5,21 +5,26 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 public class Rate {
+    private Integer idRate;
+    private Integer idUsuario;
     private Integer idMovie;
-    private Double rating;
+    private Double value;
     private Date fecha;
-    private Integer usuario;
+    private Double rateAverage;
 
     public Rate() {
     }
 
-    public Rate(Integer idMovie, Usuario usuario) {
+    public Rate(Integer idMovie, Integer idUsuario) {
+        this.idRate = 0;
         this.idMovie = idMovie;
-        this.usuario = usuario.getIdUsuario();
+        this.idUsuario = idUsuario;
         this.fecha = new Date();
-        this.rating = 0.0;
+        this.value = 0.0;
+        this.rateAverage = 0.0;
     }
 }

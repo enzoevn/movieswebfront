@@ -29,53 +29,63 @@ public class RatesServiceImpl implements IRatesService {
     @Autowired
     IMovieService moviesService;
 
-    String url = "http://localhost:8090/api/usuarios/rates"; //Cambia si es necesario
+    String url = "http://localhost:8091/rate";
 
     @Override
-    public Page<Rate> buscarTodas(Pageable pageable) {
-        Rate[] rates = template.getForObject(url, Rate[].class);
-        List<Rate> ratesList = Arrays.asList(rates);
-
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Rate> list;
-
-        if(ratesList.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, ratesList.size());
-            list = ratesList.subList(startItem, toIndex);
+    public Rate buscarRatePorMovieId(Integer idMovie) {
+        Rate[] rates = template.getForObject(url + "/movie/" + idMovie, Rate[].class);
+        Double rateAverage = 0.0;
+        if (rates != null && rates.length > 0) {
+            for (Rate r : rates) {
+                rateAverage += r.getValue();
+                System.out.println("Rate: " + r.getValue());
+            }
+            rateAverage = rateAverage / rates.length;
+            rates[0].setRateAverage(rateAverage); // Establece el promedio en el primer objeto Rate
         }
-        Page<Rate> page = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ratesList.size());
-        return page;
+
+        return rates != null && rates.length > 0 ? rates[0] : null;
     }
 
-    @Override
-    public Page<Rate> buscarRatesPorIdMovie(Integer idMovie, Pageable pageable) {
-        Rate[] rates = template.getForObject(url+"/movie/"+idMovie, Rate[].class);
-        List<Rate> ratesList = Arrays.asList(rates);
+    // @Override
+    // public Page<Rate> buscarTodas(Pageable pageable) {
+    //     Rate[] rates = template.getForObject(url, Rate[].class);
+    //     List<Rate> ratesList = Arrays.asList(rates);
 
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Rate>list;
+    //     int pageSize = pageable.getPageSize();
+    //     int currentPage = pageable.getPageNumber();
+    //     int startItem = currentPage * pageSize;
+    //     List<Rate> list;
 
-        if(ratesList.size() <startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, ratesList.size());
-            list = ratesList.subList(startItem, toIndex);
-        }
-        Page<Rate> page = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ratesList.size());
-        return page;
-    }
+    //     if(ratesList.size() < startItem) {
+    //         list = Collections.emptyList();
+    //     } else {
+    //         int toIndex = Math.min(startItem + pageSize, ratesList.size());
+    //         list = ratesList.subList(startItem, toIndex);
+    //     }
+    //     Page<Rate> page = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ratesList.size());
+    //     return page;
+    // }
 
-    @Override
-    public Rate buscarRatePorId(Integer idRate) {
-        Rate rate = template.getForObject(url+"/"+idRate, Rate.class);
-        return rate;
-    }
+    // @Override
+    // public Page<Rate> buscarRatesPorIdMovie(Integer idMovie, Pageable pageable) {
+    //     Rate[] rates = template.getForObject(url+"/movie/"+idMovie, Rate[].class);
+    //     List<Rate> ratesList = Arrays.asList(rates);
+
+    //     int pageSize = pageable.getPageSize();
+    //     int currentPage = pageable.getPageNumber();
+    //     int startItem = currentPage * pageSize;
+    //     List<Rate>list;
+
+    //     if(ratesList.size() <startItem) {
+    //         list = Collections.emptyList();
+    //     } else {
+    //         int toIndex = Math.min(startItem + pageSize, ratesList.size());
+    //         list = ratesList.subList(startItem, toIndex);
+    //     }
+    //     Page<Rate> page = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ratesList.size());
+    //     return page;
+    // }
 
     @Override
     public String guardarRate(Rate rate) {
