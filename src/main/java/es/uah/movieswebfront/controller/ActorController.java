@@ -70,7 +70,7 @@ public class ActorController {
         return "redirect:/actors";
     }
 
-    @PostMapping("/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String updateActor(Model model, @PathVariable Integer id) {
         Actor actor = actorService.getActorById(id);
         Country country = actor.getBirthCountry();

@@ -13,48 +13,72 @@
             <div class="card">
                 <h2 th:text="${titulo}" class="card-header"></h2>
                 <div class="card-body">
+
+                    <!-- Barra de Búsqueda de Usuarios -->
+                    <form th:action="@{/usuarios/search}" method="get" class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-md">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Buscar usuario por..." name="query">
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="input-group">
+                                    <select class="form-select" name="searchType">
+                                        <option value="nombre">Nombre</option>
+                                        <option value="correo">Correo</option>
+                                    </select>
+                                    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
                     <div th:if="${msg != null}" class='alert alert-success' th:text="${msg}" role='alert'></div>
                     <div th:if="${msga != null}" class='alert alert-danger' th:text="${msga}" role='alert'></div>
-                    <h4 class="card-title">
-                        <a th:href="@{/usuarios/nuevo}" class="btn btn-primary btn-sm">Crear usuario nuevo</a>
-                    </h4>
-                    <table class="table table-hover">
-                        <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Identificador</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Clave</th>
-                            <th scope="col">Correo</th>
-                            <th scope="col">Rol</th>
-                            <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="usuario : ${listadoUsuarios}">
-                            <td><a class="btn btn-primary btn-sm" th:href="@{/usuarios/ver/} + ${usuario.idUsuario}"
-                                   th:text="${usuario.idUsuario}"></a></td>
-                            <td th:text="${usuario.nombre}"></td>
-                            <td th:text="${usuario.clave}"></td>
-                            <td th:text="${usuario.correo}"></td>
-                            <td>
-                                <table>
-                                    <tbody>
-                                    <tr th:each="rol: ${usuario.roles}">
-                                        <td th:text="${rol.authority}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            <td sec:authorize="hasRole('ROLE_ADMIN')">
-                                <a th:href="@{/usuarios/editar/{id}  (id=${usuario.idUsuario})  }" th:text="'editar'"
-                                   class="btn btn-success btn-sm" role="button" title="Editar el usuario.">Editar</a>
-                                <a th:href="@{/usuarios/borrar/{id}  (id=${usuario.idUsuario})   }" th:text="'borrar'"
-                                   onclick="return confirm('¿Estas seguro?')" class="btn btn-danger btn-sm"
-                                   role="button" title="Eliminar el usuario.">Borrar</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h4 class="card-title">Listado de Usuarios</h4>
+                      <a th:href="@{/usuarios/nuevo}" class="btn btn-primary btn-sm">Crear usuario nuevo</a>
+                    </div>
+
+                    <div class="table-responsive">  <!-- Agregado para hacer la tabla responsive -->
+                      <table class="table table-hover">
+                          <thead class="table-light">
+                          <tr>
+                              <th scope="col">Identificador</th>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Clave</th>
+                              <th scope="col">Correo</th>
+                              <th scope="col">Rol</th>
+                              <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')">Acciones</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr th:each="usuario : ${listadoUsuarios}">
+                              <td><a class="btn btn-primary btn-sm" th:href="@{/usuarios/ver/} + ${usuario.idUsuario}"
+                                     th:text="${usuario.idUsuario}"></a></td>
+                              <td th:text="${usuario.nombre}"></td>
+                              <td th:text="${usuario.clave}"></td>
+                              <td th:text="${usuario.correo}"></td>
+                              <td>
+                                  <ul class="list-unstyled">
+                                      <li th:each="rol: ${usuario.roles}" th:text="${rol.authority}"></li>
+                                  </ul>
+                              </td>
+                              <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                  <div class="d-flex gap-2">
+                                      <a th:href="@{/usuarios/editar/{id}  (id=${usuario.idUsuario})  }" th:text="'Editar'"
+                                         class="btn btn-success btn-sm" role="button" title="Editar el usuario.">Editar</a>
+                                      <a th:href="@{/usuarios/borrar/{id}  (id=${usuario.idUsuario})   }" th:text="'Borrar'"
+                                         onclick="return confirm('¿Estas seguro?')" class="btn btn-danger btn-sm"
+                                         role="button" title="Eliminar el usuario.">Borrar</a>
+                                  </div>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                    </div>
 
                     <nav th:replace="~{paginator-nav :: paginator}"></nav>
 
@@ -67,6 +91,5 @@
 </div>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
-
 </body>
 </html>

@@ -7,6 +7,7 @@ import es.uah.movieswebfront.service.IRolesService;
 import es.uah.movieswebfront.service.IUsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -135,5 +136,19 @@ public class UsuariosController {
         }
 
         return "redirect:/usuarios/listado";
+    }
+
+    @GetMapping("/search")
+    public String buscarUsuarios(@RequestParam("query") String query, String searchType, @RequestParam(defaultValue = "0") int page, Model model) {
+        List<Usuario> usuarios = usuariosService.buscarUsuarios(query, searchType);
+        int pageSize = 5; // 5 per page
+        int start = page * pageSize;
+        int end = Math.min((start + pageSize), usuarios.size());
+        List<Usuario> paginatedUsuario = usuarios.subList(start, end);
+        Page<Usuario> usuarioPage = new PageImpl<>(paginatedUsuario, PageRequest.of(page, pageSize), usuarios.size());
+        PageRender<Usuario> pageRender = new PageRender<>("/usuario/query=" + query + "&searchType=" + searchType, usuarioPage);
+        model.addAttribute("listadoUsuarios", usuarioPage.getContent());
+        model.addAttribute("page", pageRender);
+        return "usuarios/listUsuario";
     }
 }

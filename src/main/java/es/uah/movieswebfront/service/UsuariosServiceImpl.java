@@ -1,5 +1,6 @@
 package es.uah.movieswebfront.service;
 
+import es.uah.movieswebfront.model.Movie;
 // import es.uah.movieswebfront.model.Alumno;
 import es.uah.movieswebfront.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,20 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Override
     public void actualizarUsuario(Usuario usuario) {
         template.put(url, usuario);
+    }
+
+    @Override
+    public List<Usuario> buscarUsuarios(String query, String searchType) {
+        RestTemplate restTemplate = new RestTemplate();
+        if (query.equals("") || query.equals("#")) {
+            return buscarTodos(PageRequest.of(0, 5)).getContent();
+        }
+        String urlQuery = url + "/search/" + searchType + "/" + query;
+        System.out.println(urlQuery);
+        Usuario[] usuarios = restTemplate.getForObject(urlQuery, Usuario[].class);
+        System.out.println(Arrays.toString(usuarios));
+        assert usuarios != null;
+        return Arrays.asList(usuarios);
     }
 
  }

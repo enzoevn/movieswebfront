@@ -56,7 +56,7 @@ public class MovieController {
     private List<Movie> getAllMovies() {
         return movieService.getAllMovies();
     }
-    @GetMapping
+    @GetMapping("/listado")
     public String getMovies(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
         Page<Movie> moviePage = movieService.getAllMovies(pageable);
@@ -228,5 +228,15 @@ public class MovieController {
         
         return "redirect:/movies/details/" + movieId;
     }    
+
+    @GetMapping
+    public String getMoviesList(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
+        Page<Movie> moviePage = movieService.getAllMovies(pageable);
+        PageRender<Movie> pageRender = new PageRender<>("/movies/listado", moviePage);
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("page", pageRender);
+        return "movies-list";
+    }
 
 }

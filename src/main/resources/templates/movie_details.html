@@ -64,6 +64,7 @@
                                 class="btn btn-danger btn-sm">Delete</button>
                         </form>
                         <a th:href="@{/movies}" class="btn btn-secondary btn-sm">Back to Movies</a>
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/movies/listado}" class="btn btn-secondary btn-sm">Back to Movies Admin</a>
                     </div>
                 </div>
                 <div class="row mt-4">
