@@ -65,6 +65,7 @@
             </div>
             <nav th:replace="~{paginator-nav :: paginator}"></nav>
         </div>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}" class="btn btn-secondary btn-sm">Ir a Inicio</a>
     </main>
 </div>
 <!-- Include the modal fragments -->
