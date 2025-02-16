@@ -60,10 +60,10 @@ public class MovieController {
     public String getMovies(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
         Page<Movie> moviePage = movieService.getAllMovies(pageable);
-        PageRender<Movie> pageRender = new PageRender<>("/movies", moviePage);
+        PageRender<Movie> pageRender = new PageRender<>("/movies/listado", moviePage);
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("page", pageRender);
-        return "movies";
+        return "movies/movies";
     }
 
     @GetMapping("/details/{id}")
@@ -80,7 +80,7 @@ public class MovieController {
         model.addAttribute("uniqueGenres", uniqueGenres);
         model.addAttribute("rate", rate);
         model.addAttribute("user", user);
-        return "movie_details";
+        return "movies/movie_details";
     }
 
     @GetMapping("/search")
@@ -94,7 +94,7 @@ public class MovieController {
         PageRender<Movie> pageRender = new PageRender<>("/movies/search?query=" + query + "&searchType=" + searchType, moviePage);
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("page", pageRender);
-        return "movies";
+        return "movies/movies";
     }
 
     @PostMapping("/uploadImage/{id}")
@@ -107,16 +107,16 @@ public class MovieController {
             PageRender<Movie> pageRender = new PageRender<>("/movies", movies);
             model.addAttribute("movies", movies);
             model.addAttribute("page", pageRender);
-            return "movies";
+            return "movies/movies";
         }
         // Update the page with the new image
         return "redirect:/movies/details/" + id;
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteMovie(@PathVariable Integer id) {
+    public String deleteMovie(@PathVariable Integer id, Principal principal) {
         movieService.deleteMovie(id);
-        return "redirect:/movies";
+        return "redirect:/movies/listado";
     }
 
     @GetMapping("/edit/{id}")
@@ -233,10 +233,10 @@ public class MovieController {
     public String getMoviesList(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
         Page<Movie> moviePage = movieService.getAllMovies(pageable);
-        PageRender<Movie> pageRender = new PageRender<>("/movies/listado", moviePage);
+        PageRender<Movie> pageRender = new PageRender<>("/movies", moviePage);
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("page", pageRender);
-        return "movies-list";
+        return "movies/movies-list";
     }
 
 }
