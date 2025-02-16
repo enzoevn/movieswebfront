@@ -1,11 +1,15 @@
 package es.uah.movieswebfront.service;
 
 import java.time.LocalDate;
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -75,5 +79,45 @@ public class RatesServiceImpl implements IRatesService {
             }
         }
         return rateList;
+    }
+
+    @Override
+    public Page<Rate> buscarTodos(Pageable pageable) {
+        Rate[] rates = template.getForObject(url, Rate[].class);
+        List<Rate> ratesList = Arrays.asList(rates);
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Rate> list;
+
+        if (ratesList.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, ratesList.size());
+            list = ratesList.subList(startItem, toIndex);
+        }
+
+        Page<Rate> page = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), ratesList.size());
+        return page;
+    }
+
+    @Override
+    public List<Rate> buscarRatesPorUsuarios(String query, String searchType) {
+        RestTemplate restTemplate = new RestTemplate();
+        if (query.equals("") || query.equals("#")) {
+            return buscarTodos(PageRequest.of(0, 5)).getContent();
+        }
+        Usuario usuario = usuariosService.buscarUsuarioPorNombre(query);
+        if (usuario == null) {
+            return Collections.emptyList();
+        }
+        String userId = usuariosService.buscarUsuarioPorNombre(query).getIdUsuario().toString();
+        String urlQuery = url + "/" + searchType + "/" + userId;
+        System.out.println(urlQuery);
+        Rate[] rates = restTemplate.getForObject(urlQuery, Rate[].class);
+        System.out.println(Arrays.toString(rates));
+        assert rates != null;
+        return Arrays.asList(rates);
     }
 }

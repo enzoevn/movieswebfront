@@ -20,4 +20,16 @@ public class Rate {
     private Date fecha;
     private Double rateAverage;
 
+    @Override
+    public String toString() {
+        return "Rate{" +
+                "idRate=" + idRate +
+                ", idUsuario=" + idUsuario +
+                ", idMovie=" + idMovie +
+                ", value=" + value +
+                ", fecha=" + fecha +
+                ", rateAverage=" + rateAverage +
+                '}';
+    }
+
 }

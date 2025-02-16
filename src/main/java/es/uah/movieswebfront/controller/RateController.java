@@ -61,5 +61,28 @@ public class RateController {
         return "redirect:/rates/listado";
     }
 
+    @GetMapping("/search")
+    public String buscarRatesPorUsuarios(@RequestParam("query") String query, String searchType, @RequestParam(defaultValue = "0") int page, Model model) {
+        List<Rate> rates = ratesService.buscarRatesPorUsuarios(query, searchType);
+        System.out.println("Rates: " + rates);
+        // se iteran los rates para asignar el nombre de usuario y el título de la película
+        for (Rate rate : rates) {
+            String username = usuarioService.buscarUsuarioPorId(rate.getIdUsuario()).getNombre();
+            String movieTitle = moviesService.getMovieById(rate.getIdMovie()).getTitle();
+            rate.setMovieTitle(movieTitle);
+            rate.setUsername(username);
+        }
+        
+        int pageSize = 5; // 5 per page
+        int start = page * pageSize;
+        int end = Math.min((start + pageSize), rates.size());
+        List<Rate> paginatedUsuario = rates.subList(start, end);
+        Page<Rate> ratePage = new PageImpl<>(paginatedUsuario, PageRequest.of(page, pageSize), rates.size());
+        PageRender<Rate> pageRender = new PageRender<>("/rates/query=" + query + "&searchType=" + searchType, ratePage);
+        model.addAttribute("rates", ratePage.getContent());
+        model.addAttribute("listadoRates", ratePage.getContent());
+        model.addAttribute("page", pageRender);
+        return "rates";
+    }
 
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <head th:replace="~{fragments/head :: head (pageTitle='MoviesApp | Gestión de Calificaciones de Películas')}"></head>
 <body>
 
@@ -14,16 +15,27 @@
                 <div class="card-body">
                     <p class="card-text">Aquí puede gestionar las calificaciones de las películas.</p>
 
-                    <!-- Barra de búsqueda por Rating -->
+                    <!-- Barra de búsqueda Combinada -->
                     <form th:action="@{/rates/search}" method="get" class="mb-3">
-                        <div class="input-group">
-                            <input type="number" class="form-control" placeholder="Buscar por Rating (ej. 4.5)" name="rating" step="0.1" min="0" max="5">
-                            <div class="input-group-append">
+                        <div class="row g-2">
+                            <div class="col-md">
+                                <div class="input-group">
+                                    <div class="input-group-text">Buscar por:</div>
+                                    <select class="form-select" name="searchType">
+                                        <option value="rating">Rating</option>
+                                        <option value="movieTitle">Título de Película</option>
+                                        <option value="user">Usuario</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <input type="text" class="form-control" placeholder="Ingrese su búsqueda" name="query">
+                            </div>
+                            <div class="col-md-auto">
                                 <button class="btn btn-primary" type="submit">Buscar</button>
                             </div>
                         </div>
                     </form>
-
 
                     <table class="table table-hover">
                         <thead>
@@ -39,11 +51,11 @@
                             <td th:text="${rate.movieTitle}"></td>
                             <td th:text="${rate.username}"></td>
                             <td th:text="${#numbers.formatDecimal(rate.value, 1, 1)}"></td>
-                            <td></td> <!-- Dejo este campo vacío porque no hay un campo correspondiente en la estructura original. -->
+                            <td></td>
                             <td>
-                                <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/rates/delete/{id}(id=${rate.idRate})}" method="post"
+                                <form sec:authorize="hasRole('ROLE_ADMIN')"
+                                      th:action="@{/rates/delete/{id}(id=${rate.idRate})}" method="post"
                                       onsubmit="return confirm('¿Está seguro de que desea eliminar esta calificación?');">
-                                    <input type="hidden" name="_method" value="delete" />
                                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                 </form>
                             </td>
