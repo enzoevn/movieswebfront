@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesApp | Gestión de Calificaciones de Películas')}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="container">
+    <main>
+        <div class="mt-5 pt-5">
+            <div class="card">
+                <h2 class="card-header">Gestión de Calificaciones de Películas</h2>
+                <div class="card-body">
+                    <p class="card-text">Aquí puede gestionar las calificaciones de las películas.</p>
+
+                    <!-- Barra de búsqueda por Rating -->
+                    <form th:action="@{/rates/search}" method="get" class="mb-3">
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="Buscar por Rating (ej. 4.5)" name="rating" step="0.1" min="0" max="5">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Título de la Película</th>
+                            <th>Usuario</th>
+                            <th>Rating</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="rate : ${rates}">
+                            <td th:text="${rate.movieTitle}"></td>
+                            <td th:text="${rate.username}"></td>
+                            <td th:text="${#numbers.formatDecimal(rate.value, 1, 1)}"></td>
+                            <td></td> <!-- Dejo este campo vacío porque no hay un campo correspondiente en la estructura original. -->
+                            <td>
+                                <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/rates/delete/{id}(id=${rate.idRate})}" method="post"
+                                      onsubmit="return confirm('¿Está seguro de que desea eliminar esta calificación?');">
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav th:replace="~{paginator-nav :: paginator}"></nav>
+
+                    <a th:href="@{/admin}" class="btn btn-secondary btn-sm">Volver al Panel de Administración</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

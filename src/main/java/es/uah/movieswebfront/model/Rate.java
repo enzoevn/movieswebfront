@@ -10,8 +10,12 @@ import lombok.Setter;
 @Setter
 public class Rate {
     private Integer idRate;
+    private Integer idUsuario;
+    private String username;
+    private String movieTitle;
     private Usuario usuario;
     private Integer idMovie;
+    private Movie movie;
     private Double value;
     private Date fecha;
     private Double rateAverage;
