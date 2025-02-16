@@ -56,16 +56,6 @@ public class MovieController {
     private List<Movie> getAllMovies() {
         return movieService.getAllMovies();
     }
-
-    // @GetMapping
-    // public String getMovies(Model model) {
-    //     List<Movie> movies = getAllMovies();
-    //     Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
-    //     model.addAttribute("movies", movies);
-    //     model.addAttribute("uniqueGenres", uniqueGenres);
-    //     return "movies";
-    // }
-
     @GetMapping
     public String getMovies(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
@@ -134,15 +124,6 @@ public class MovieController {
         Movie movie = movieService.getMovieById(id);
         List<Actor> selectedActors = movie.getActors();
         Country country = movie.getCountry();
-
-        // if (selectedActors == null) {
-        //     selectedActors = new ArrayList<>();
-        // }
-
-        // if (country == null) {
-        //     country = new Country();
-        // }
-
         model.addAttribute("movie", movie);
         model.addAttribute("countries", countryService.getAllCountries());
         model.addAttribute("actors", actorService.getAllActors());
