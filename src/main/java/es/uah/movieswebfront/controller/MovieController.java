@@ -4,11 +4,13 @@ import es.uah.movieswebfront.model.Actor;
 import es.uah.movieswebfront.model.Country;
 import es.uah.movieswebfront.model.Movie;
 import es.uah.movieswebfront.model.Rate;
+import es.uah.movieswebfront.model.Usuario;
 import es.uah.movieswebfront.paginator.PageRender;
 import es.uah.movieswebfront.service.IActorService;
 import es.uah.movieswebfront.service.ICountryService;
 import es.uah.movieswebfront.service.IMovieService;
 import es.uah.movieswebfront.service.IRatesService;
+import es.uah.movieswebfront.service.IUsuariosService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +27,15 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/movies")
@@ -45,6 +52,9 @@ public class MovieController {
 
     @Autowired
     private IRatesService rateService;
+
+    @Autowired
+    private IUsuariosService usuarioService;
 
     private List<Movie> getAllMovies() {
         return movieService.getAllMovies();
@@ -70,15 +80,19 @@ public class MovieController {
     }
 
     @GetMapping("/details/{id}")
-    public String getMovieById(Model model, @PathVariable Integer id) {
+    public String getMovieById(Model model, @PathVariable Integer id, Principal principal) {
         Movie movie = movieService.getMovieById(id);
-        Rate rate =  rateService.buscarRatePorMovieId(id);
+        // Buscar usuario por email en lugar de parsear el id
+        Usuario user = usuarioService.buscarUsuarioPorCorreo(principal.getName());
+        System.out.println("Usuario: " + user.getIdUsuario());
+        Rate rate = rateService.buscarRatePorMovieId(id);
         List<Movie> movies = getAllMovies();
         Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
         model.addAttribute("movie", movie);
         model.addAttribute("movies", movies);
         model.addAttribute("uniqueGenres", uniqueGenres);
         model.addAttribute("rate", rate);
+        model.addAttribute("user", user);
         return "movie_details";
     }
 
@@ -223,5 +237,18 @@ public class MovieController {
         // movieRateService.resetMovieRate(movieId);
         return "redirect:/movies/rates";
     }
+
+    @PostMapping("/rate")
+    public String rateMovie(@RequestParam("rating") int rating,
+                            @RequestParam("movieId") int movieId,
+                            @RequestParam("userId") int userId) {
+        System.out.println("Rating: " + rating);
+        System.out.println("Movie ID: " + movieId);
+        System.out.println("User ID: " + userId);
+        
+        rateService.guardarRate(rating, movieId, userId);
+        
+        return "redirect:/movies/details/" + movieId;
+    }    
 
 }

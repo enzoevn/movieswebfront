@@ -1,10 +1,14 @@
 package es.uah.movieswebfront.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import es.uah.movieswebfront.model.Movie;
 import es.uah.movieswebfront.model.Rate;
+import es.uah.movieswebfront.model.Usuario;
 
 
 @Service
@@ -78,9 +82,18 @@ public class RatesServiceImpl implements IRatesService {
     // }
 
     @Override
-    public String guardarRate(Rate rate) {
-        Rate rateAux = template.postForObject(url, rate, Rate.class);
-        return rateAux != null ? "Rate guardada con éxito" : "Error al guardar la rate";        
+    public String guardarRate(int rating, Integer idMovie, Integer idUser) {
+        Rate rate = new Rate();
+        Usuario usuario = usuariosService.buscarUsuarioPorId(idUser);
+        Movie movie = moviesService.getMovieById(idMovie);
+    
+        rate.setValue((double) rating);
+        rate.setIdMovie(movie.getId());
+        rate.setUsuario(usuario);
+        rate.setFecha(java.sql.Date.valueOf(LocalDate.now()));
+        template.postForObject(url, rate, Rate.class);
+        
+        return "Rate guardado";
     }
 
     @Override

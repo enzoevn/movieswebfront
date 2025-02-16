@@ -7,7 +7,7 @@ public interface IRatesService {
     // Page<Rate> buscarTodas(Pageable pageable);
     // Page<Rate> buscarRatesPorIdMovie(Integer idMovie, Pageable pageable);
     Rate buscarRatePorMovieId(Integer idMovie);
-    String guardarRate(Rate rate);
+    String guardarRate(int rating, Integer idMovie, Integer idUser);
     void eliminarRate(Integer idRate);
 
 }

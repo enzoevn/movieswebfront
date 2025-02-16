@@ -1,48 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | All Movies Information')}"></head>
-<body>
-<header th:replace="~{fragments/header :: header}"></header>
-<nav th:replace="~{fragments/navbar :: navbar}"></nav>
-<div class="container">
-    <main>
-        <div class="mt-5 pt-5">
-            <h1 th:text="${movie.title}">Movie Title</h1>
-            <div class="row">
-                <div class="col-md-4">
-                    <img th:src="@{${movie.coverImage}}" alt="Movie Cover" class="img-thumbnail" style="width: 100%; height: auto;">
-                </div>
-                <div class="col-md-8">
-                    <p><strong>Director:</strong> <span th:text="${movie.id}">Director Name</span></p>
-                    <p><strong>Genre:</strong> <span th:text="${movie.genre}">Genre</span></p>
-                    <p><strong>Year:</strong> <span th:text="${movie.year}">Year</span></p>
-                    <p><strong>Country:</strong> <span th:text="${movie.country.countryName}">Country</span></p>
-                    <p><strong>Duration:</strong> <span th:text="${movie.duration}">Duration</span></p>
-                    <p><strong>Description:</strong> <span th:text="${movie.synopsis}">Description</span></p>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-                    <p><strong>Rate:</strong> <span th:text="${rate.rateAverage}">Rate</span></p>
-  
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/movies/edit/{id}(id=${movie.id})}" class="btn btn-warning btn-sm">Edit</a>
-                    <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="get" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this movie?');">
-                        <input type="hidden" name="_method" value="delete" />
-                        <button sec:authorize="hasRole('ROLE_ADMIN')" type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                    <a th:href="@{/movies}" class="btn btn-secondary btn-sm">Back to Movies</a>
+<head th:replace="~{fragments/head :: head (pageTitle='MoviesWeb | All Movies Information')}"></head>
+
+<body>
+    <header th:replace="~{fragments/header :: header}"></header>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div class="container">
+        <main>
+            <div class="mt-5 pt-5">
+                <h1 th:text="${movie.title}">Movie Title</h1>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img th:src="@{${movie.coverImage}}" alt="Movie Cover" class="img-thumbnail"
+                            style="width: 100%; height: auto;">
+                    </div>
+                    <div class="col-md-8">
+                        <p><strong>Director:</strong> <span th:text="${movie.id}">Director Name</span></p>
+                        <p><strong>Genre:</strong> <span th:text="${movie.genre}">Genre</span></p>
+                        <p><strong>Year:</strong> <span th:text="${movie.year}">Year</span></p>
+                        <p><strong>Country:</strong> <span th:text="${movie.country.countryName}">Country</span></p>
+                        <p><strong>Duration:</strong> <span th:text="${movie.duration}">Duration</span></p>
+                        <p><strong>Description:</strong> <span th:text="${movie.synopsis}">Description</span></p>
+
+                        <!-- if rate.rateAverage exists -->
+                        <div th:if="${rate != null and rate.rateAverage != null}">
+                            <p><strong>Rate:</strong> <span th:text="${rate.rateAverage}">Rate</span></p>
+                        </div>
+                        <!-- if rate or rate.rateAverage not exist -->
+                        <div th:unless="${rate != null and rate.rateAverage != null}">
+                            <p><strong>Rate:</strong> <span>No rate yet</span></p>
+                        </div>
+                        <!-- Rate Form -->
+                        <form th:action="@{/movies/rate}" method="post" class="mb-3">
+                            <div class="mb-3">
+                                <label for="rating">Rate this movie (1-10):</label>
+                                <select class="form-select" id="rating" name="rating">
+                                    <option value="1">1 - Very Bad</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5 - Average</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10 - Excellent</option>
+                                </select>
+                            </div>
+                            <!-- Campos ocultos para movieId y userId -->
+                            <input type="hidden" name="movieId" th:value="${movie.id}" />
+                            <input type="hidden" name="userId" th:value="${user.idUsuario}" />
+                            <button type="submit" class="btn btn-primary btn-sm">Submit Rating</button>
+                        </form>
+                        <!-- End Rate Form -->
+
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/movies/edit/{id}(id=${movie.id})}"
+                            class="btn btn-warning btn-sm">Edit</a>
+                        <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="get" class="d-inline"
+                            onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button sec:authorize="hasRole('ROLE_ADMIN')" type="submit"
+                                class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        <a th:href="@{/movies}" class="btn btn-secondary btn-sm">Back to Movies</a>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h2>Actors</h2>
+                        <ul class="list-group">
+                            <li th:each="actor : ${movie.actors}" class="list-group-item">
+                                <span th:text="${actor.name}">Actor Name</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h2>Actors</h2>
-                    <ul class="list-group">
-                        <li th:each="actor : ${movie.actors}" class="list-group-item">
-                            <span th:text="${actor.name}">Actor Name</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+        </main>
+    </div>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
+
 </html>
