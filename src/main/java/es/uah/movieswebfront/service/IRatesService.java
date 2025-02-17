@@ -9,8 +9,8 @@ import es.uah.movieswebfront.model.Rate;
 
 public interface IRatesService {
 
-    Rate buscarRatePorMovieId(Integer idMovie);
-    String guardarRate(int rating, Integer idMovie, Integer idUser);
+    List<Rate> buscarRatePorMovieId(Integer idMovie);
+    String guardarRate(int rating, Integer idMovie, Integer idUser, String comments);
     void eliminarRate(Integer idRate);
     List<Rate> obtenerTodosRates();
     List<Rate> buscarRatesPorUsuarios(String query, String searchType);

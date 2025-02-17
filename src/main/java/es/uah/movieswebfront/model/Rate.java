@@ -19,6 +19,7 @@ public class Rate {
     private Double value;
     private Date fecha;
     private Double rateAverage;
+    private String comments;
 
     @Override
     public String toString() {
@@ -29,6 +30,7 @@ public class Rate {
                 ", value=" + value +
                 ", fecha=" + fecha +
                 ", rateAverage=" + rateAverage +
+                ", comments='" + comments + '\'' +
                 '}';
     }
 

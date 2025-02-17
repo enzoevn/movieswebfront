@@ -8,7 +8,7 @@
 
 <div class="container">
     <main>
-        <div class="mt-5 pt-5">
+        <div>
             <h2 th:text="${titulo}" class="text-secondary border-bottom border-success pb-2"></h2>
 
             <form th:action="@{/usuarios/guardar}" method="post" th:object="${usuario}">

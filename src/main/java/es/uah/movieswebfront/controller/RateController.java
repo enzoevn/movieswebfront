@@ -1,5 +1,6 @@
 package es.uah.movieswebfront.controller;
 
+import es.uah.movieswebfront.model.Movie;
 import es.uah.movieswebfront.model.Rate;
 import es.uah.movieswebfront.model.Usuario;
 import es.uah.movieswebfront.paginator.PageRender;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Controller
 @RequestMapping("/rates")
@@ -34,13 +36,31 @@ public class RateController {
     public String listRates(@RequestParam(defaultValue="0") int page, Model model, Principal principal) {
         List<Rate> rates = ratesService.obtenerTodosRates();
         Usuario user = usuarioService.buscarUsuarioPorCorreo(principal.getName());
+        List<Movie> movies = moviesService.getAllMovies();
         
-        // Asigna el objeto Movie a cada Rate usando idMovie en lugar de rate.getMovie()
+        // Asignar nombre de la película y nombre del usuario a cada rate
         for (Rate rate : rates) {
-            String username = usuarioService.buscarUsuarioPorId(rate.getIdUsuario()).getNombre();
-            String movieTitle = moviesService.getMovieById(rate.getIdMovie()).getTitle();
-            rate.setMovieTitle(movieTitle);
-            rate.setUsername(username);
+            try {
+                Movie movie = moviesService.getMovieById(rate.getIdMovie());
+                if (movie != null) {
+                    rate.setMovieTitle(movie.getTitle());
+                } else {
+                    rate.setMovieTitle("Unknown Movie");
+                }
+            } catch (HttpClientErrorException e) {
+                rate.setMovieTitle("Unknown Movie");
+            }
+
+            try {
+                Usuario rateUser = usuarioService.buscarUsuarioPorId(rate.getIdUsuario());
+                if (rateUser != null) {
+                    rate.setUsername(rateUser.getNombre());
+                } else {
+                    rate.setUsername("Unknown User");
+                }
+            } catch (HttpClientErrorException e) {
+                rate.setUsername("Unknown User");
+            }
         }
         
         int pageSize = 5; // 5 rates per page
@@ -52,6 +72,7 @@ public class RateController {
         model.addAttribute("rates", ratePage.getContent());
         model.addAttribute("page", pageRender);
         model.addAttribute("user", user);
+        model.addAttribute("movies", movies);
         return "rates";
     }
 
@@ -65,12 +86,30 @@ public class RateController {
     public String buscarRatesPorUsuarios(@RequestParam("query") String query, String searchType, @RequestParam(defaultValue = "0") int page, Model model) {
         List<Rate> rates = ratesService.buscarRatesPorUsuarios(query, searchType);
         System.out.println("Rates: " + rates);
+        
         // se iteran los rates para asignar el nombre de usuario y el título de la película
         for (Rate rate : rates) {
-            String username = usuarioService.buscarUsuarioPorId(rate.getIdUsuario()).getNombre();
-            String movieTitle = moviesService.getMovieById(rate.getIdMovie()).getTitle();
-            rate.setMovieTitle(movieTitle);
-            rate.setUsername(username);
+            try {
+                Usuario rateUser = usuarioService.buscarUsuarioPorId(rate.getIdUsuario());
+                if (rateUser != null) {
+                    rate.setUsername(rateUser.getNombre());
+                } else {
+                    rate.setUsername("Unknown User");
+                }
+            } catch (HttpClientErrorException e) {
+                rate.setUsername("Unknown User");
+            }
+    
+            try {
+                Movie movie = moviesService.getMovieById(rate.getIdMovie());
+                if (movie != null) {
+                    rate.setMovieTitle(movie.getTitle());
+                } else {
+                    rate.setMovieTitle("Unknown Movie");
+                }
+            } catch (HttpClientErrorException e) {
+                rate.setMovieTitle("Unknown Movie");
+            }
         }
         
         int pageSize = 5; // 5 per page

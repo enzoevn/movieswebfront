@@ -20,19 +20,5 @@ public class Movie {
     private String synopsis;
     private String coverImage;
     private List<Actor> actors;
-
-    
-
-    // public Movie(Integer id, String title, Integer year, Integer duration, Country country, String director, String genre, String synopsis, String coverImage, List<Actor> actors) {
-    //     this.id = id;
-    //     this.title = title;
-    //     this.year = year;
-    //     this.duration = duration;
-    //     this.country = country;
-    //     this.director = director;
-    //     this.genre = genre;
-    //     this.synopsis = synopsis;
-    //     this.coverImage = coverImage;
-    //     this.actors = actors;
-    // }
+    private Double rateAverage;
 }

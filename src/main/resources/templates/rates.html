@@ -9,7 +9,7 @@
 
 <div class="container">
     <main>
-        <div class="mt-5 pt-5">
+        <div>
             <div class="card">
                 <h2 class="card-header">Gestión de Calificaciones de Películas</h2>
                 <div class="card-body">
@@ -22,8 +22,8 @@
                                 <div class="input-group">
                                     <div class="input-group-text">Buscar por:</div>
                                     <select class="form-select" name="searchType">
-                                        <option value="rating">Rating</option>
-                                        <option value="movieTitle">Título de Película</option>
+                                        <!-- <option value="rating">Rating</option>
+                                        <option value="movieTitle">Título de Película</option> -->
                                         <option value="user">Usuario</option>
                                     </select>
                                 </div>
@@ -43,6 +43,7 @@
                             <th>Título de la Película</th>
                             <th>Usuario</th>
                             <th>Rating</th>
+                            <th>Reseña</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -51,7 +52,7 @@
                             <td th:text="${rate.movieTitle}"></td>
                             <td th:text="${rate.username}"></td>
                             <td th:text="${#numbers.formatDecimal(rate.value, 1, 1)}"></td>
-                            <td></td>
+                            <td th:text="${rate.comments}"></td>                                
                             <td>
                                 <form sec:authorize="hasRole('ROLE_ADMIN')"
                                       th:action="@{/rates/delete/{id}(id=${rate.idRate})}" method="post"

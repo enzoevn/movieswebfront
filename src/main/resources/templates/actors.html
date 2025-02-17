@@ -7,7 +7,7 @@
 <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container">
     <main>
-        <div class="mt-5 pt-5">
+        <div>
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>List Actors</h1>
                 <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/actors/create}" class="btn btn-primary">Create Actor</a>

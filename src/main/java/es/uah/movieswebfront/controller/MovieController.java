@@ -72,13 +72,21 @@ public class MovieController {
         // Buscar usuario por email en lugar de parsear el id
         Usuario user = usuarioService.buscarUsuarioPorCorreo(principal.getName());
         System.out.println("Usuario: " + user.getIdUsuario());
-        Rate rate = rateService.buscarRatePorMovieId(id);
+        List<Rate> rates = rateService.buscarRatePorMovieId(id);
+
+        // Asigna el objeto Movie a cada Rate usando idMovie en lugar de rate.getMovie()
+        for (Rate rate : rates) {
+            String username = usuarioService.buscarUsuarioPorId(rate.getIdUsuario()).getNombre();
+            rate.setUsername(username);
+        }
+
+        System.out.println("Rateeeeee: " + rates);
         List<Movie> movies = getAllMovies();
         Set<String> uniqueGenres = movies.stream().map(Movie::getGenre).collect(Collectors.toSet());
         model.addAttribute("movie", movie);
         model.addAttribute("movies", movies);
         model.addAttribute("uniqueGenres", uniqueGenres);
-        model.addAttribute("rate", rate);
+        model.addAttribute("rates", rates);
         model.addAttribute("user", user);
         return "movies/movie_details";
     }
@@ -113,7 +121,7 @@ public class MovieController {
         return "redirect:/movies/details/" + id;
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteMovie(@PathVariable Integer id, Principal principal) {
         movieService.deleteMovie(id);
         return "redirect:/movies/listado";
@@ -219,12 +227,15 @@ public class MovieController {
     @PostMapping("/rate")
     public String rateMovie(@RequestParam("rating") int rating,
                             @RequestParam("movieId") int movieId,
-                            @RequestParam("userId") int userId) {
+                            @RequestParam("userId") int userId,
+                            @RequestParam("comments") String comments
+                            ) {
         System.out.println("Rating: " + rating);
         System.out.println("Movie ID: " + movieId);
         System.out.println("User ID: " + userId);
+        System.out.println("Comments: " + comments);
         
-        rateService.guardarRate(rating, movieId, userId);
+        rateService.guardarRate(rating, movieId, userId, comments);
         
         return "redirect:/movies/details/" + movieId;
     }    
@@ -234,6 +245,14 @@ public class MovieController {
         Pageable pageable = PageRequest.of(page, 5); // 5 movies per page
         Page<Movie> moviePage = movieService.getAllMovies(pageable);
         PageRender<Movie> pageRender = new PageRender<>("/movies", moviePage);
+    
+        // Asignamos rateAverage a cada película
+        for (Movie movie : moviePage.getContent()) {
+            List<Rate> rates = rateService.buscarRatePorMovieId(movie.getId());
+            double rateAverage = rates.stream().mapToDouble(Rate::getValue).average().orElse(0.0);
+            movie.setRateAverage(rateAverage); // Asegúrate de que Movie tenga un campo rateAverage
+        }
+    
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("page", pageRender);
         return "movies/movies-list";

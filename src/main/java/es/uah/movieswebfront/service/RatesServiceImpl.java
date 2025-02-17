@@ -1,6 +1,7 @@
 package es.uah.movieswebfront.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,7 @@ public class RatesServiceImpl implements IRatesService {
     String url = "http://localhost:8091/rate";
 
     @Override
-    public Rate buscarRatePorMovieId(Integer idMovie) {
+    public List<Rate> buscarRatePorMovieId(Integer idMovie) {
         Rate[] rates = template.getForObject(url + "/movie/" + idMovie, Rate[].class);
         Double rateAverage = 0.0;
         if (rates != null && rates.length > 0) {
@@ -41,14 +42,16 @@ public class RatesServiceImpl implements IRatesService {
                 System.out.println("Rate: " + r.getValue());
             }
             rateAverage = rateAverage / rates.length;
-            rates[0].setRateAverage(rateAverage); // Establece el promedio en el primer objeto Rate
+            for (Rate r : rates) {
+                r.setRateAverage(rateAverage); // Establece el promedio en cada objeto Rate
+            }
         }
 
-        return rates != null && rates.length > 0 ? rates[0] : null;
+        return rates != null ? Arrays.asList(rates) : new ArrayList<>();
     }
 
     @Override
-    public String guardarRate(int rating, Integer idMovie, Integer idUser) {
+    public String guardarRate(int rating, Integer idMovie, Integer idUser, String comments) {
         Rate rate = new Rate();
         Usuario usuario = usuariosService.buscarUsuarioPorId(idUser);
     
@@ -56,6 +59,9 @@ public class RatesServiceImpl implements IRatesService {
         rate.setIdMovie(idMovie);
         rate.setUsuario(usuario);
         rate.setFecha(java.sql.Date.valueOf(LocalDate.now()));
+        rate.setComments(comments);
+
+        System.out.println("Rate: " + rate);
         template.postForObject(url, rate, Rate.class);
         
         return "Rate guardado";
